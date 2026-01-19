@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { X, Send, Bot, User, Loader2 } from 'lucide-react';
 import { getProductContext, formatPrice, searchProducts } from '../data/products';
-import { useTheme } from '../context/ThemeContext';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -20,7 +19,6 @@ ${getProductContext()}
 4. Будь дружелюбным и используй эмодзи умеренно.`;
 
 export default function ChatWidget() {
-    const { theme } = useTheme();
     const [isOpen, setIsOpen] = useState(false);
     const [isWiggling, setIsWiggling] = useState(false);
     const [messages, setMessages] = useState<Message[]>([

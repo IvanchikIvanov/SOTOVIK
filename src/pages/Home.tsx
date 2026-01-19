@@ -1,21 +1,6 @@
-import { useState, useEffect } from 'react';
 import { ShoppingCart, Heart } from 'lucide-react';
 
-const FIRST_FRAME = 2;
-const LAST_FRAME = 33;
-const FRAME_DURATION = 150; // ms per frame
-
 export default function Home() {
-    const [currentFrame, setCurrentFrame] = useState(FIRST_FRAME);
-
-    // Frame animation loop
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentFrame(prev => prev >= LAST_FRAME ? FIRST_FRAME : prev + 1);
-        }, FRAME_DURATION);
-        return () => clearInterval(interval);
-    }, []);
-
     const applePhones = [
         'iPhone 17 Pro Max', 'iPhone 17 Pro', 'iPhone 17 Air', 'iPhone 17',
         'iPhone 16 Pro Max', 'iPhone 16 Pro', 'iPhone 16 Plus', 'iPhone 16',

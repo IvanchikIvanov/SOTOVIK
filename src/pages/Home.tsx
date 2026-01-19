@@ -39,7 +39,7 @@ export default function Home() {
         <div className="p-6 md:p-8 space-y-12 max-w-[1600px] mx-auto">
 
             {/* HERO BANNER with Video Background */}
-            <section className="relative h-[400px] w-full rounded-3xl overflow-hidden bg-black border border-white/10 flex items-center group shadow-2xl">
+            <section className="relative h-[280px] md:h-[400px] w-full rounded-2xl md:rounded-3xl overflow-hidden bg-black border border-white/10 flex items-center group shadow-2xl">
 
                 {/* Video Background */}
                 <div className="absolute inset-0">
@@ -56,10 +56,10 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent" />
 
                 {/* Content */}
-                <div className="relative z-10 px-12 md:px-20 max-w-2xl space-y-6">
-                    <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-2">Новинка в магазине</h1>
-                    <p className="text-xl md:text-2xl text-zinc-300 font-medium">Ещё более восхитительный.<br />Ещё более прочный.</p>
-                    <button className="mt-6 px-8 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 rounded-full text-white font-medium transition-all">
+                <div className="relative z-10 px-6 md:px-20 max-w-2xl space-y-4 md:space-y-6">
+                    <h1 className="text-3xl md:text-7xl font-bold tracking-tight text-white mb-2">Новинка в магазине</h1>
+                    <p className="text-base md:text-2xl text-zinc-300 font-medium">Ещё более восхитительный.<br />Ещё более прочный.</p>
+                    <button className="mt-4 md:mt-6 px-6 md:px-8 py-2.5 md:py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 rounded-full text-white text-sm md:text-base font-medium transition-all">
                         Оформить заказ
                     </button>
                 </div>
@@ -68,8 +68,8 @@ export default function Home() {
             {/* BESTSELLERS */}
             <section>
                 <h2 className="text-2xl font-bold mb-6 text-zinc-900 dark:text-white">Хиты продаж</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="rounded-3xl p-8 border transition-colors
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    <div className="rounded-2xl md:rounded-3xl p-6 md:p-8 border transition-colors
                         bg-white border-zinc-200 shadow-sm
                         dark:bg-zinc-900/50 dark:border-white/5 dark:shadow-none
                     ">
@@ -84,7 +84,7 @@ export default function Home() {
                             <li className="text-zinc-400 dark:text-white/60 text-xs mt-4 cursor-pointer">Ещё →</li>
                         </ul>
                     </div>
-                    <div className="rounded-3xl p-8 border transition-colors
+                    <div className="rounded-2xl md:rounded-3xl p-6 md:p-8 border transition-colors
                         bg-white border-zinc-200 shadow-sm
                         dark:bg-zinc-900/50 dark:border-white/5 dark:shadow-none
                     ">

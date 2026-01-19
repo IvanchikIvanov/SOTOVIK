@@ -29,6 +29,26 @@ export default function Layout() {
             {/* Global Snow Effect (Only in Dark Mode) */}
             {theme === 'dark' && <Snowfall />}
 
+            {/* MOBILE HEADER */}
+            <header className="md:hidden fixed top-0 w-full z-50 h-14 flex items-center justify-between px-4 transition-colors duration-300
+                bg-white/90 border-b border-zinc-200 backdrop-blur-md 
+                dark:bg-black/90 dark:border-white/5
+            ">
+                <Link to="/" className="flex items-center">
+                    <img src={theme === 'dark' ? '/logoDark.svg' : '/logoLight.svg'} alt="SOTOVIK" className="h-8 object-contain" />
+                </Link>
+
+                <div className="flex items-center gap-4">
+                    <button onClick={toggleTheme} className="text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors">
+                        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                    </button>
+                    <Link to="/cart" className="text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white relative">
+                        <ShoppingBag size={20} />
+                        <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-black text-white dark:bg-white dark:text-black text-[9px] font-bold">0</span>
+                    </Link>
+                </div>
+            </header>
+
             {/* DESKTOP HEADER */}
             <header className="hidden md:flex fixed top-0 w-full z-50 h-14 items-center justify-between px-6 transition-colors duration-300
                 bg-white/80 border-b border-zinc-200 backdrop-blur-md 

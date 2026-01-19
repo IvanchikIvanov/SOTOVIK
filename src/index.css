@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+/* Tailwind v4: Configure dark mode to use class-based strategy */
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+@layer base {
+  :root {
+    /* Light Mode Variables (Default) */
+    --color-background: #F3F4F6;
+    --color-foreground: #18181B;
+    --color-muted: #71717A;
+    --color-card: #FFFFFF;
+    --color-border: #E4E4E7;
+    --radius: 0.5rem;
+  }
+
+  html.dark,
+  .dark {
+    /* Dark Mode Variables */
+    --color-background: #000000;
+    --color-foreground: #F5F5F7;
+    --color-muted: #A1A1AA;
+    --color-card: rgba(22, 22, 23, 0.8);
+    --color-border: rgba(66, 66, 69, 0.72);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    @apply antialiased;
+  }
+}
+
+.glass {
+  background: var(--color-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border);
+}
+
+@keyframes wiggle {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-10deg);
+  }
+
+  50% {
+    transform: rotate(10deg);
+  }
+
+  75% {
+    transform: rotate(-5deg);
+  }
+}

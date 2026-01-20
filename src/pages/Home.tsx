@@ -12,13 +12,11 @@ export default function Home() {
                 title: 'Все iPhone',
                 image: 'https://images.unsplash.com/photo-1696446701796-da61225697d7?q=80&w=400&auto=format&fit=crop',
                 items: [
-                    items: [
-                        'iPhone 15 Pro Max 256GB Black',
-                        'iPhone 15 Pro Max 512GB Blue',
-                        'iPhone 15 Pro 128GB White',
-                        'iPhone 15 Pro 256GB Natural',
-                        'iPhone 15 Pro 256GB Blue'
-                    ]
+                    'iPhone 15 Pro Max 256GB Black',
+                    'iPhone 15 Pro Max 512GB Blue',
+                    'iPhone 15 Pro 128GB White',
+                    'iPhone 15 Pro 256GB Natural',
+                    'iPhone 15 Pro 256GB Blue'
                 ]
             },
             {

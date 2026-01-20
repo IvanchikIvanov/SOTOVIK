@@ -4,7 +4,7 @@ import { useState } from 'react';
 export default function Home() {
     const [activeTab, setActiveTab] = useState('Apple');
 
-    const brands = ['Apple', 'Samsung', 'Xiaomi', 'Google', 'Realme', 'Dyson'];
+    const brands = ['Apple', 'Samsung', 'Xiaomi', 'Google', 'Realme'];
 
     const brandContent: Record<string, { title: string; image: string; items: string[] }[]> = {
         Apple: [

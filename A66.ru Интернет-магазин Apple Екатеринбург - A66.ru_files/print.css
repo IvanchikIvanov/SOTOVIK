@@ -1,0 +1,40 @@
+.navigation-topbar, .topMenu, #text_after, .bot-table,.footer div:first-child
+{
+	display:none;
+}
+.footer 
+{
+	border:none;
+}
+body,html,.container,.container-fluid, #posits
+{
+	width:1000px !important;
+}
+.spezcard 
+{
+	width:32% !important
+}
+ a[href]:after {
+    content: "";
+  }
+  .navigation-topbar, .topMenu, #text_after, .bot-table,.footer div:first-child, .gift, #searc, #cart,.watch
+{
+	display:none !important;
+}
+.footer 
+{
+	border:none;
+}
+body,html,.container,.container-fluid, #posits
+{
+	width:1000px !important;
+}
+.spezcard 
+{
+
+}
+.phn
+{
+	margin-right:40px;
+	
+}

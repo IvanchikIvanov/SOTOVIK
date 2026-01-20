@@ -1,0 +1,243 @@
+(function () {
+  "use strict";
+
+  var params = _tbEmbedArgs;
+  var data = {};
+  for (var x in params) {
+    if (!params.hasOwnProperty(x)) {
+      continue;
+    }
+    data[params[x][0]] = params[x][1];
+  }
+
+  var baseUrl = data.baseUrl;
+  var lang = detectLanguage();
+  var icons = {};
+  var staticUrl = data.staticUrl || "https://widget-cdn-prod.textback.io/";
+
+  if (baseUrl.includes("dev")) {
+    staticUrl = "https://widget-cdn-dev.textback.io/";
+  }
+
+  window.TextBack = window.TextBack || {};
+  window.TextBack.widget = window.TextBack.widget || {};
+  window.TextBack.widget.translations = (function () {
+    return {
+      ru: {
+        vk_channel: "ВКонтакте",
+        tg_channel: "Telegram",
+        facebook_channel: "Facebook",
+        viber_channel: "Viber",
+        skype_channel: "Skype",
+        instagram_channel: "Instagram",
+        whatsapp_channel: "WhatsApp",
+        whatsappb_channel: "WhatsApp Business",
+
+        name: "Александр",
+        hello: "Здравствуйте!",
+        notify_us: "Дайте нам знать, если у вас <br/> возникнут вопросы",
+        ask_us_a_question:
+          "Просто задайте вопрос<br/> через удобный вам</br> мессенджер",
+        drop_a_line: "Начать чат в мессенджере",
+        powered_by_textback_link: `https://www.textback.ru/?utm_source=TextBack_tool&utm_medium=widget-chat&utm_campaign=${window.location.origin}${window.location.pathname}`,
+        powered_by_textback: "Работает на TextBack",
+      },
+      en: {
+        vk_channel: "VK",
+        tg_channel: "Telegram",
+        facebook_channel: "Facebook",
+        viber_channel: "Viber",
+        skype_channel: "Skype",
+        instagram_channel: "Instagram",
+        whatsapp_channel: "WhatsApp",
+        whatsappb_channel: "WhatsApp Business",
+
+        name: "Alexander",
+        hello: "Hey there,",
+        notify_us: "Feel free to ask us anything!",
+        ask_us_a_question: "Message us from your favorite app",
+        drop_a_line: "Message us",
+        powered_by_textback_link: `https://www.textback.ru/?utm_source=TextBack_tool&utm_medium=widget-chat&utm_campaign=${window.location.origin}${window.location.pathname}`,
+        powered_by_textback: "Powered by TextBack",
+      },
+    };
+  })();
+
+  var translations = window.TextBack.widget.translations;
+
+  function queryStr() {
+    var args = [];
+    for (var i = 0, max = _tbEmbedArgs.length; i < max; i++) {
+      var urlParam = _tbEmbedArgs[i].join("=");
+      args.push(urlParam);
+    }
+    return args.join("&");
+  }
+
+  function loadScript(url) {
+    var s = document.createElement("script");
+    s.type = "text/javascript";
+    s.src = url;
+    s.charset = "utf-8";
+    document.head.appendChild(s);
+  }
+
+  function render() {
+    var widget_container;
+
+    load(baseUrl + "/widget.html", function (response) {
+      widget_container = document.createElement("div");
+      var html = response.responseText;
+      html = html.replace(/{{lang}}/g, lang);
+      html = html.replace(/{{baseUrl}}/g, baseUrl);
+      html = html.replace(/{{dropALine}}/g, translations[lang]["drop_a_line"]);
+      html = html.replace(
+        /{{poweredByTextBackLink}}/g,
+        translations[lang]["powered_by_textback_link"]
+      );
+      html = html.replace(
+        /{{poweredByTextBackMobileLink}}/g,
+        translations[lang]["powered_by_textback_link"]
+      );
+      html = html.replace(
+        /{{poweredByTextBack}}/g,
+        translations[lang]["powered_by_textback"]
+      );
+      html = html.replace(/{{name}}/g, translations[lang]["name"]);
+      html = html.replace(/{{hello}}/g, translations[lang]["hello"]);
+      html = html.replace(/{{notifyUs}}/g, translations[lang]["notify_us"]);
+      html = html.replace(
+        /{{askUsAQuestion}}/g,
+        translations[lang]["ask_us_a_question"]
+      );
+      html = html.replace(/{{staticUrl}}/g, staticUrl);
+
+      widget_container.innerHTML = html;
+
+      var body_el = document.getElementsByTagName("body")[0];
+      body_el.appendChild(widget_container);
+      // loadScript(baseUrl + "/js/appinsights.js");
+      loadScript(staticUrl + "widget/js/main.min.js");
+    });
+  }
+
+  /**
+   * http://stackoverflow.com/a/22165218/716769
+   * @constructor
+   */
+  function ScriptPath() {
+    var scriptPath = "";
+    try {
+      //Throw an error to generate a stack trace
+      throw new Error();
+    } catch (e) {
+      //Split the stack trace into each line
+      var stackLines = e.stack.split("\n");
+      var callerIndex = 0;
+      //Now walk though each line until we find a path reference
+      for (var i in stackLines) {
+        if (!stackLines[i].match(/http[s]?:\/\//)) continue;
+        //We skipped all the lines with out an http so we now have a script reference
+        //This one is the class constructor, the next is the getScriptPath() call
+        //The one after that is the user code requesting the path info (so offset by 2)
+        callerIndex = Number(i) + 2;
+        break;
+      }
+      //Now parse the string for each section we want to return
+      this.pathParts = stackLines[callerIndex].match(
+        /((http[s]?:\/\/.+\/)([^\/]+\.js)):/
+      );
+    }
+
+    this.fullPath = function () {
+      return this.pathParts[1];
+    };
+
+    this.path = function () {
+      return this.pathParts[2];
+    };
+
+    this.file = function () {
+      return this.pathParts[3];
+    };
+
+    this.fileNoExt = function () {
+      var parts = this.file().split(".");
+      parts.length = parts.length != 1 ? parts.length - 1 : 1;
+      return parts.join(".");
+    };
+  }
+
+  function load(url, callback) {
+    var xhr;
+
+    if (typeof XMLHttpRequest !== "undefined") xhr = new XMLHttpRequest();
+    else {
+      var versions = [
+        "MSXML2.XmlHttp.5.0",
+        "MSXML2.XmlHttp.4.0",
+        "MSXML2.XmlHttp.3.0",
+        "MSXML2.XmlHttp.2.0",
+        "Microsoft.XmlHttp",
+      ];
+
+      for (var i = 0, len = versions.length; i < len; i++) {
+        try {
+          xhr = new ActiveXObject(versions[i]);
+          break;
+        } catch (e) {}
+      }
+    }
+
+    xhr.onreadystatechange = ensureReadiness;
+
+    function ensureReadiness() {
+      if (xhr.readyState < 4) {
+        return;
+      }
+
+      if (xhr.status !== 200) {
+        return;
+      }
+
+      if (xhr.readyState === 4) {
+        callback(xhr);
+      }
+    }
+
+    xhr.open("GET", url, true);
+    xhr.send("");
+  }
+
+  function detectLanguage() {
+    var result = "en";
+
+    function isSupported(lang) {
+      var supportedLangs = ["ru", "en"];
+      return supportedLangs.indexOf(lang) != -1;
+    }
+
+    var browserLang = navigator.language && navigator.language.split("-")[0];
+
+    var rusDomains = ["ru", "su", "ua", "by", "kz"];
+    var domainMatch = window.location.hostname.match(/\.(\w+)$/);
+    var domain = domainMatch && domainMatch[1];
+
+    var htmlLangFull = document
+      .getElementsByTagName("html")[0]
+      .getAttribute("lang");
+    var htmlLang = htmlLangFull && htmlLangFull.split("-")[0];
+
+    if (isSupported(browserLang)) {
+      result = browserLang;
+    } else if (rusDomains.indexOf(domain) != -1) {
+      result = "ru";
+    } else if (isSupported(htmlLang)) {
+      result = htmlLang;
+    }
+
+    return result;
+  }
+
+  render();
+})();

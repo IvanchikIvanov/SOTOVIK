@@ -12,8 +12,8 @@ export interface Product {
 export const products: Product[] = [
     {
         id: 1,
-        name: "iPhone 15 Pro Max 256GB",
-        price: 129990,
+        name: "iPhone 15 Pro Max 256GB Black Titanium",
+        price: 99990,
         in_stock: true,
         description: "Флагманский смартфон Apple с чипом A17 Pro, титановым корпусом и продвинутой камерой.",
         specs: {
@@ -22,15 +22,32 @@ export const products: Product[] = [
             "Память": "256 GB",
             "Камера": "48 MP + 12 MP + 12 MP",
             "Батарея": "4422 mAh",
-            "Цвет": "Титановый черный"
+            "Цвет": "Черный титан"
         },
         category: "smartphones",
-        image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400"
+        image: "/images/products/iphone-15-pro-max-black.jpg"
     },
     {
         id: 2,
-        name: "iPhone 15 Pro 128GB",
-        price: 109990,
+        name: "iPhone 15 Pro Max 512GB Blue Titanium",
+        price: 112990,
+        in_stock: true,
+        description: "Флагманский смартфон Apple с чипом A17 Pro, титановым корпусом и продвинутой камерой.",
+        specs: {
+            "Дисплей": "6.7\" Super Retina XDR OLED",
+            "Процессор": "A17 Pro",
+            "Память": "512 GB",
+            "Камера": "48 MP + 12 MP + 12 MP",
+            "Батарея": "4422 mAh",
+            "Цвет": "Синий титан"
+        },
+        category: "smartphones",
+        image: "/images/products/iphone-15-pro-max-blue.jpg"
+    },
+    {
+        id: 3,
+        name: "iPhone 15 Pro 128GB White Titanium",
+        price: 81990,
         in_stock: true,
         description: "Компактный флагман с титановым дизайном и Action Button.",
         specs: {
@@ -42,24 +59,41 @@ export const products: Product[] = [
             "Цвет": "Белый титан"
         },
         category: "smartphones",
-        image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400"
+        image: "/images/products/iphone-15-pro-white.jpg"
     },
     {
-        id: 3,
-        name: "iPhone 14 128GB",
-        price: 69990,
+        id: 4,
+        name: "iPhone 15 Pro 256GB Natural Titanium",
+        price: 97990,
         in_stock: true,
-        description: "Надежный iPhone с отличной камерой и долгой автономностью.",
+        description: "Компактный флагман с титановым дизайном и Action Button.",
         specs: {
             "Дисплей": "6.1\" Super Retina XDR OLED",
-            "Процессор": "A15 Bionic",
-            "Память": "128 GB",
-            "Камера": "12 MP + 12 MP",
-            "Батарея": "3279 mAh",
-            "Цвет": "Синий"
+            "Процессор": "A17 Pro",
+            "Память": "256 GB",
+            "Камера": "48 MP + 12 MP + 12 MP",
+            "Батарея": "3274 mAh",
+            "Цвет": "Натуральный титан"
         },
         category: "smartphones",
-        image: "https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?w=400"
+        image: "/images/products/iphone-15-pro-natural.jpg"
+    },
+    {
+        id: 13,
+        name: "iPhone 15 Pro 256GB Blue Titanium",
+        price: 94690,
+        in_stock: true,
+        description: "Компактный флагман с титановым дизайном и Action Button.",
+        specs: {
+            "Дисплей": "6.1\" Super Retina XDR OLED",
+            "Процессор": "A17 Pro",
+            "Память": "256 GB",
+            "Камера": "48 MP + 12 MP + 12 MP",
+            "Батарея": "3274 mAh",
+            "Цвет": "Синий титан"
+        },
+        category: "smartphones",
+        image: "/images/products/iphone-15-pro-blue.jpg"
     },
     {
         id: 4,

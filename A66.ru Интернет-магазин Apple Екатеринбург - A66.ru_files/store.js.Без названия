@@ -1,0 +1,238 @@
+$(document).ready(function(){
+  
+  $(".fast-buy-but").click(function(){
+    
+    // Чтобы можно было вызвать stopPropagation()
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Находим ближайший общий родительский блок
+    var $row = $(this).closest('.row');
+
+    // Получаем телефон из нужного input
+    var phon = $row.find("#inputPhone").val().trim(); // trim() убирает лишние пробелы
+    
+    var id   = $(this).data("id");
+    
+    //var re = /\+\d{1} \(\d{3}\) \d{3}-\d{2}-\d{2}/g;
+    
+    var re = /\+\d{1}\(\d{3}\)\d{7}/g;
+    
+    var valid = re.test(phon); 
+    //if(  phon.length < 6 ){
+    //alert("1 Номер телефона введен правильно!" + phon + ' i ' + id );
+    if (valid){ 
+      $(this).attr("disabled", true);
+      $.ajax({
+        type: "POST",
+        url: "/send_order.php",
+        data: { "phone" : phon, 
+                "id"    : id
+             },
+        success: function( msg ){
+          event.stopPropagation();
+          //alert("Номер телефона введен правильно!" + phon + ' i ' + id );
+          window.location.href = "/thanx.php";
+            
+          if(msg == "ok"){
+            
+          }else{
+            /*alert("Опс... кажется что то пошло не так");*/
+          }
+        }
+      });
+      
+      /*$.post("/send_order.php",{ phone:phon, id:id }, function(data){
+        //console.log(data);
+        window.location.href = "/thanx.php";
+        //alert("Номер телефона введен правильно!" + phon + ' i ' + id );
+      });*/
+      
+      
+      /*$.post("/send_order.php",{ phone:phon, id:id }).done(function(data){
+        alert("2 Номер телефона введен правильно!" + phon + ' i ' + id );
+      });*/
+      
+      /*$("#input_holder").removeClass("error");*/
+      
+      /*$.post("/send_order.php",{phone:phon,id:id}).done(function(data){
+        window.location.href="/thanx.php";
+        alert("Заказ принят");
+        // if(data!="error"){$("#fast-buy").removeClass("alert-info");
+        //$("#fast-buy").addClass("alert-success");
+        //$("#fast-buy").html("<h4>Спасибо, Ваш заказ принят</h4><p>Номер заказа <strong>"+data+"</strong><br>Наши сотрудники свяжутся с Вами в ближайшее время</p>");}
+        
+      });*/
+    }else{
+      /*alert("Номер телефона введен неправильно");*/
+      $("#input_holder").addClass("error");
+      return false;
+      
+    }
+    
+    
+    const eventParams = {"products":[{"id":id}]};
+    // VK.Retargeting.ProductEvent(3797, "purchase", eventParams);
+  });
+
+  $('.store_amount').keyup(function(){var val=parseInt($(this).val())
+  if(!val)val=0
+  if(val<0)val=0
+  $(this).val(val)})
+
+$('body').on ('click', '.store_buy', function () {
+	var bt=$(this);
+  //fbq('track', 'AddToCart');
+  var id=$(this).data('id');
+  const eventParams = { "products":[{"id":id}] };
+  
+  // VK.Retargeting.ProductEvent(3797, "add_to_cart", eventParams);
+  
+  var amount=1 
+  
+  $.post( '/ajx.basket.php',
+          {act:'add', id:id, amount:amount},
+          function(data){
+            console.log('тест' + data['status']);
+            console.log(data['basket_head']);
+            if( data['status'] == 'ok' ){
+              bt.removeClass('btn-warning store_buy').addClass('btn-success store_buy2').html('В корзине').attr( 'onclick', "location.href='/basket.php'");
+              //if(typeof( data['basket_head'] ) != "undefined" && data['basket_head'] !== null) {
+                $('.hd_bskt').html( '<p>' + data['basket_head'] + '</p>' );
+              //}
+            }
+            var callback=(data['status'] == 'ok')?'<br><div class="alert alert-success">Добавлено <a href=/basket.php><u>в корзину</u></a></div>':'Ошибка при добавлении товара'
+            if(data['status']=='ok') location.href="/basket.php";
+          },"json")
+  return false;	
+});
+
+$('.store_add').click(function(){var id=$(this).data('id'),th=$(this);
+var amount=1
+if(amount<1)amount=1
+$.post('/ajx.basket.php',{act:'add',id:id,amount:amount},function(data){var callback=(data['status']=='ok')?'<br><div class="alert alert-success">Добавлено <a href=/basket.php><u>в корзину</u></a></div>':'Ошибка при добавлении товара'
+if(data['status']=='ok'){th.text("В корзине");refresh_basket();};},"json")})
+
+$('.store_callback').click(function(){$(this).html('')})})
+
+function change_amount(id,z,cart){
+  var amount = parseInt($('#amount_'+id).val());
+  if( z == 1){
+    amount = ( amount > 0 ) ? amount - 1 : 0;
+  }
+  if(z==2){
+    amount = amount+1
+  }
+  if(amount > 20) amount = 20;
+  if(cart){
+    $.post('/ajx.basket.php',{
+      act:'change_amount',id:id,amount:amount}, 
+      function(data){
+        $('#basket_ajx').html(data)
+      }
+    );
+    setTimeout('refresh_basket()',300)
+  }else{
+    $('#amount_'+id).val(amount)
+  }
+}
+
+function refresh_basket(){$.post('/ajx.basket.php',{act:'get'},function(data){$('#head_basket').show()
+$('#head_basket p').html(data['basket_head'])},"json")}
+function delete_basket_item(id){
+	const eventParams = {"products":[{"id":id}]};
+$.post('/ajx.basket.php',{act:'delete_item',id:id},function(data){if(data)$('#basket_ajx').html(data);
+// VK.Retargeting.ProductEvent(3797, "remove_from_cart", eventParams);
+})
+refresh_basket()}
+
+function send_order(){var fio=$('#fio').val()
+var phone=$('#phon').val()
+var email=$('#email').val()
+var comment=$('#comment').val()
+var address=$('#address').val()
+var pcode=$('#pcode').val()
+var date=$('#date').val()
+var time=$('#time').val()
+var nalbeznal=$('input[name=nalbeznal]').val()
+var dost=$('input[name=dost]:checked').val();
+if(!phone.length){alert('Заполните обязательные поля')}else{var org=$('#org').val()
+$.post('/ajx.basket.php',{act:'order',fio:fio,pcode:pcode,phone:phone,date:date,time:time,address:address,email:email,org:org,nalbeznal:nalbeznal,dost:dost,comment:comment},function(data){if(data){$('.disable_me input').attr('disabled','disabled')
+$('.disable_me textarea').attr('disabled','disabled')
+$("#ordNumber").text(data);$("#orderOk").modal("show");$('#callback').html('')
+$('#order_submit').remove();}else{$('#callback').html('Ошибка.')}})}setTimeout("$('#callback').html('')",2000)}
+
+function send_order_new(){
+
+  var fio=$('#fio').val()
+  var subscribe     = 0;
+  var sms           = 0;
+  var is_for_adm    = 0;
+  var is_for_prog   = 0;
+  
+  
+  var phone         = $('#phon').val();
+  var email         = $('#email').val();
+  var comment       = $('#comment').val();
+  var address       = $('#address').val();
+  var pcode         = $('#pcode').val();
+  var date          = $('#date').val();
+  var time          = $('#time').val();
+  var admin_comment = $('#admin_comment').val();
+  
+  var nalbeznal     = $('input[name=nalbeznal]').val();
+  var payment       = $('input[name=payment]:checked').val();
+  var dost          = $('input[name=dost]:checked').val(); 
+  
+  if( $('input[name=subscribe]:checked').length   == 1 ) subscribe   = 1;
+  if( $('input[name=sms]:checked').length         == 1 ) sms         = 1; 
+  if( $('input[name=is_for_adm]:checked').length  == 1 ) is_for_adm  = 1;
+  if( $('input[name=is_for_prog]:checked').length == 1 ) is_for_prog = 1; 
+   
+  for (var i = 0; i < phone.length; i++){
+  	var outputSign = phone[i];  
+  	if(!$.isNumeric(outputSign) && outputSign!="(" && outputSign!=")" && outputSign!="+") {
+  		//alert(i);
+  	  $("#phon").focus(); 
+      $("#phon").parents(".form-group").addClass("has-error");
+      $("#phoneError").removeClass("hidden");
+    return;
+    }
+  }
+  if(phone[3]==="8") {
+    $("#phon").focus(); 
+    $("#phon").parents(".form-group").addClass("has-error");
+    $("#phoneError").removeClass("hidden");
+    return;
+  }
+  if(!phone.length){
+    alert('Заполните обязательные поля')
+  }else{
+  	var org=$('#org').val();
+  	$("#order_submit").html("<img src='/images/spinner.gif'>");
+  	$("#order_submit").attr("disabled","disabled");
+  	$.post('/ajx.basket.php', {act:'order_new', sms:sms, fio:fio, pcode:pcode, phone:phone, date:date, time:time, address:address, email:email, org:org, nalbeznal:nalbeznal, dost:dost, comment:comment, subscribe:subscribe, payment:payment, is_for_adm:is_for_adm, is_for_prog:is_for_prog, admin_comment:admin_comment }, 
+  	function(data){
+  		if(data){
+  			// commFire();
+  			
+  			// console.log(data);
+  			location.href="/thanx.php";
+  			
+  			}
+  			else
+  			{
+  				$('#callback').html('<div class="alert alert-danger"><h2>Ошибка.</h2></div>')
+  			}
+  		})
+  	}
+  	setTimeout("location.reload()",5000);
+	
+}
+	
+function send_order2(){$('.user_contacts input.radio').each(function(i){if($(this).attr('checked')==true){var contacts_id=$(this).val()
+$.post('/ajx.basket.php',{act:'order',contacts_id:contacts_id},function(data){if(data=='ok'){$('.order_submit').attr('disabled','disabled')
+$('#callback2').html('<p style="color: #cc0000;">Ваш заказ принят. Спасибо! Для подтверждения заказа в ближайшее время с вами свяжется оператор.</p>')
+$('#head_basket p').html('Заказ принят. Корзина пуста.')}else{$('#callback').html('Ошибка.')}})}})}function basket_login(){var email=$('input#email').val()
+var passw=$('input#password').val()
+if((!email.length)||(!passw.length)){$('#callback').html('Заполните поля')}else{$.post('/ajx.basket.php',{act:'login',email:email,password:passw},function(data){if(data==1){location='/basket.php'}else{$('#callback').html(data)}})}return false}

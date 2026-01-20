@@ -1,0 +1,100 @@
+
+function fcbutton(){
+	if($(".brandselector[class*='btn-info']").length>0||$(".swch[class*='color_act']").length>0||$(".varselector[class*='btn-info']").length>0){$(".clear_filter").removeClass("hidden");$(".hrhr").hide();}else{$(".clear_filter").addClass("hidden");$(".hrhr").show();}}
+
+$(function(){
+  $("#morebrands").click(function(){$(this).hide();$(".brandselector:hidden").fadeIn("slow");})
+
+  $(".brandselector").on("click", function(){
+  	$(this).toggleClass("btn-default").toggleClass("btn-info");
+  	if($(".brandselector[class*='btn-info']").length>0)
+  	{
+  		$(".brandselector[class*='btn-info']").each(function(){$(".spezcard[data-brand='"+$(this).data("id")+"']").removeClass("brand_hide");
+  		$.post("/filter.php",{brand_set:$(this).data("id")})});
+  		$(".brandselector[class*='btn-default']").each(function(){$(".spezcard[data-brand='"+$(this).data("id")+"']").addClass("brand_hide");
+  		$.post("/filter.php",{brand_unset:$(this).data("id")});});
+  		$(".spezcard[data-brand='0']").addClass("brand_hide");
+  		$("#text_after").hide();
+  	}
+  	else
+  	{
+  		$(".spezcard").removeClass("brand_hide");
+  		$.post("/filter.php",{brand_clear:1});
+  	}
+  	fcbutton();
+  });
+
+  $(".varselector").on("click",function(){
+  	$(this).toggleClass("btn-default").toggleClass("btn-info");
+  	if($(".varselector[class*='btn-info']").length>0)
+  	{
+  		$(".varselector[class*='btn-info']").each(function()
+  		{
+  			$(".spezcard[data-variant='"+$(this).data("id")+"']").removeClass("variant_hide");
+  			$.post("/filter.php",{variant_set:$(this).data("id")});
+  		});
+  		$(".varselector[class*='btn-default']").each(function(){
+  			$(".spezcard[data-variant='"+$(this).data("id")+"']").addClass("variant_hide");
+  			$.post("/filter.php",{variant_unset:$(this).data("id")});
+  		});
+  		$(".spezcard[data-variant='0']").addClass("variant_hide");$("#text_after").hide();
+  	}
+  	else
+  	{
+  		$(".spezcard").removeClass("variant_hide");
+  		$.post("/filter.php",{variant_clear:1});
+  	}
+  	fcbutton();
+  });
+
+  $(".swch").on("click",function(){
+  	$(this).toggleClass("color_act").toggleClass("color_noact");
+  	if($(".swch[class*='color_act']").length>0)
+  	{
+  		$(".swch[class*='color_act']").each(function(){
+  			$(".spezcard[data-color='"+$(this).data("id")+"']").removeClass("color_hide");
+        $(".spezcard[data-color='"+$(this).data("id")+"']").parent(".col").removeClass("color_hide");
+  			$.post("/filter.php",{color_set:$(this).data("id")})
+  		});
+  		$(".swch[class*='color_noact']").each(function(){
+  			$(".spezcard[data-color='"+$(this).data("id")+"']").addClass("color_hide");
+        $(".spezcard[data-color='"+$(this).data("id")+"']").parent(".col").addClass("color_hide");
+  			$.post("/filter.php",{color_unset:$(this).data("id")})});
+  			$(".spezcard[data-color='0']").addClass("color_hide");
+        $(".spezcard[data-color='0']").parent(".col").addClass("color_hide");
+  			$("#text_after").hide();
+    }
+    else
+    {
+    	$(".spezcard").removeClass("color_hide");
+      $(".spezcard").parent(".col").removeClass("color_hide");
+    	$.post("/filter.php",{color_clear:1});
+    }
+    fcbutton();
+  });
+  
+	$(".clear_filter").click(function(){
+		$(".spezcard").removeClass("brand_hide");
+		$(".spezcard").removeClass("color_hide");
+    $(".spezcard").parent(".col").removeClass("color_hide");
+		$(".spezcard").removeClass("variant_hide");
+		$(".swch[class*='color_act']").removeClass("color_act");
+		$(".swch").addClass("color_noact");
+		$(".brandselector[class*='btn-info']").removeClass("btn-info");
+		$(".brandselector").addClass("btn-default");
+		$(".varselector[class*='btn-info']").removeClass("btn-info");
+		$(".varselector").addClass("btn-default");
+		$(".clear_filter").addClass("hidden");
+		$.post("/filter.php",{color_clear:1,brand_clear:1,variant_clear:1});
+		$("#text_after").show();
+  });
+    
+  $(".withbuy").find(".spezcard").mouseover(function(){
+		var tlen=$(this).find("a");
+		console.log(tlen.attr("title"));
+		$("#nezabudka").html(tlen.attr("title"));
+  });
+  
+	$(".spezcard").mouseout(function(){$("#nezabudka").html("")});
+  
+})

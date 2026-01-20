@@ -128,13 +128,6 @@ export default function Home() {
                             {brandContent[activeTab].map((column, idx) => (
                                 <div key={idx} className="space-y-4">
                                     <div className="group cursor-pointer">
-                                        <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-zinc-100 dark:bg-zinc-900 mb-4 border border-zinc-100 dark:border-white/5">
-                                            <img
-                                                src={column.image}
-                                                alt={column.title}
-                                                className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500 mix-blend-multiply dark:mix-blend-normal"
-                                            />
-                                        </div>
                                         <h3 className="text-center text-[#3bbae6] text-sm md:text-base font-medium mb-1 group-hover:underline decoration-[#3bbae6] underline-offset-4">
                                             {column.title}
                                         </h3>

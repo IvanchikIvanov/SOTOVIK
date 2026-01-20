@@ -1,7 +1,7 @@
 import { ShoppingCart, Heart, ShoppingBag } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { products } from '../data/products';
+import { products, formatPrice } from '../data/products';
 
 export default function Home() {
     const [activeTab, setActiveTab] = useState('Apple');
@@ -84,7 +84,7 @@ export default function Home() {
                                             </h3>
                                             <div className="flex items-center justify-between">
                                                 <span className="text-sm font-bold text-[#3bbae6]">
-                                                    {new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(product.price)}
+                                                    {formatPrice(product.price)}
                                                 </span>
                                                 <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-white/10 flex items-center justify-center text-zinc-400 group-hover:text-[#3bbae6] transition-colors">
                                                     <ShoppingBag size={14} />
@@ -108,12 +108,12 @@ export default function Home() {
             <section>
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">Все товары</h2>
-                    <span className="text-xs text-zinc-500">Найдено: 12 товаров</span>
+                    <span className="text-xs text-zinc-500">Найдено: {products.length} товаров</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {products.map((product) => (
-                        <div key={product.id} className="rounded-2xl overflow-hidden border transition-all group
+                        <Link key={product.id} to={`/product/${product.id}`} className="rounded-2xl overflow-hidden border transition-all group block
                             bg-white border-zinc-200 hover:border-zinc-300 hover:shadow-lg
                             dark:bg-zinc-900/30 dark:border-white/5 dark:hover:border-white/20 dark:hover:shadow-none
                         ">
@@ -121,27 +121,28 @@ export default function Home() {
                                 bg-zinc-50
                                 dark:bg-black
                             ">
-                                <img src={product.image} alt={product.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 mix-blend-multiply dark:mix-blend-normal" />
+                                <img src={product.image || ''} alt={product.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 mix-blend-multiply dark:mix-blend-normal" />
                                 <button className="absolute top-3 right-3 p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/20
                                     text-zinc-400 hover:text-red-500
                                     dark:bg-white/5 dark:text-white/50 dark:hover:text-white
-                                ">
+                                    z-10
+                                " onClick={(e) => { e.preventDefault(); /* Like logic */ }}>
                                     <Heart size={16} />
                                 </button>
                             </div>
 
                             <div className="p-5">
-                                <h3 className="text-sm font-medium mb-1 leading-snug min-h-[40px] text-zinc-900 dark:text-white">{product.name}</h3>
-                                <p className="text-xs text-zinc-500 mb-4">{product.color || product.spec}</p>
-                                <div className="text-xl font-bold mb-4 text-zinc-900 dark:text-white">{product.price}</div>
+                                <h3 className="text-sm font-medium mb-1 leading-snug min-h-[40px] text-zinc-900 dark:text-white line-clamp-2">{product.name}</h3>
+                                <p className="text-xs text-zinc-500 mb-4 h-4 overflow-hidden">{product.specs?.['Память'] ? `${product.specs['Память']}, ` : ''}{product.specs?.['Цвет'] || product.category}</p>
+                                <div className="text-xl font-bold mb-4 text-zinc-900 dark:text-white">{formatPrice(product.price)}</div>
                                 <button className="w-full py-3 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition-colors
                                     bg-zinc-100 hover:bg-zinc-200 text-zinc-900 border border-zinc-200
                                     dark:bg-white/5 dark:hover:bg-white/10 dark:text-white dark:border-white/10
-                                ">
+                                " onClick={(e) => { e.preventDefault(); /* Add to cart */ }}>
                                     <ShoppingCart size={16} /> В корзину
                                 </button>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </section>

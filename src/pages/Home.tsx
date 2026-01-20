@@ -105,12 +105,12 @@ export default function Home() {
             <section>
                 {/* Tabs */}
                 <div className="flex justify-center mb-8 overflow-x-auto pb-2 scrollbar-hide">
-                    <div className="flex items-center p-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm">
+                    <div className="inline-flex items-center p-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm min-w-full md:min-w-0 justify-between md:justify-start">
                         {brands.map((brand) => (
                             <button
                                 key={brand}
                                 onClick={() => setActiveTab(brand)}
-                                className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${activeTab === brand
+                                className={`px-3 md:px-6 py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 whitespace-nowrap ${activeTab === brand
                                     ? 'bg-[#3bbae6] text-white shadow-md'
                                     : 'text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5'
                                     }`}

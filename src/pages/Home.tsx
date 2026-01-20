@@ -1,79 +1,22 @@
 import { ShoppingCart, Heart, ShoppingBag } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { products } from '../data/products';
 
 export default function Home() {
     const [activeTab, setActiveTab] = useState('Apple');
 
     const brands = ['Apple', 'Samsung', 'Xiaomi', 'Google', 'Realme'];
 
-    const brandContent: Record<string, { title: string; image: string; items: string[] }[]> = {
-        Apple: [
-            {
-                title: 'Все iPhone',
-                image: 'https://images.unsplash.com/photo-1696446701796-da61225697d7?q=80&w=400&auto=format&fit=crop',
-                items: [
-                    'iPhone 15 Pro Max 256GB Black',
-                    'iPhone 15 Pro Max 512GB Blue',
-                    'iPhone 15 Pro 128GB White',
-                    'iPhone 15 Pro 256GB Natural',
-                    'iPhone 15 Pro 256GB Blue'
-                ]
-            },
-            {
-                title: 'Все Apple Watch',
-                image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=400&auto=format&fit=crop',
-                items: [
-                    'Watch Ultra 3', 'Watch Ultra 2', 'Watch Series 11', 'Watch Series 10',
-                    'Watch Series 9', 'Watch Series 8', 'Watch SE',
-                    'Ремешки 40/41', 'Ремешки 44/45', 'Аксесс. Watch',
-                    'HomePod', 'AirPods', 'Чехлы AirPods', 'AirTag', 'Чехлы AirTag'
-                ]
-            },
-            {
-                title: 'Все iPad',
-                image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?q=80&w=400&auto=format&fit=crop',
-                items: [
-                    'iPad 10.2/10.9/11', 'iPad Air 10.9/11', 'iPad Air 13',
-                    'iPad Pro 11', 'iPad Pro 12.9/13', 'iPad mini',
-                    'Чехлы iPad', 'Чехлы iPad Air', 'Чехлы iPad Pro', 'Чехлы iPad mini'
-                ]
-            },
-            {
-                title: 'Все Mac',
-                image: 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=400&auto=format&fit=crop',
-                items: [
-                    'MacBook Air', 'MacBook Pro', 'iMac', 'Mac mini',
-                    'Мониторы Apple', 'Чехлы Mac', 'Аксесс. Macbook',
-                    'Чехлы для iPhone', 'Аксессуары Apple', 'Защитные стекла',
-                    'Беспроводные ЗУ', 'Авто Аксессуары', 'Аксессуары'
-                ]
-            }
-        ],
-        Samsung: [
-            {
-                title: 'Galaxy S',
-                image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?q=80&w=400&auto=format&fit=crop',
-                items: ['Galaxy S24 Ultra', 'Galaxy S24+', 'Galaxy S24', 'Galaxy S23 Ultra', 'Galaxy S23']
-            },
-            {
-                title: 'Galaxy Z',
-                image: 'https://images.unsplash.com/photo-1627565431604-d754f9104c27?q=80&w=400&auto=format&fit=crop',
-                items: ['Galaxy Z Fold6', 'Galaxy Z Flip6', 'Galaxy Z Fold5', 'Galaxy Z Flip5']
-            },
-            {
-                title: 'Tablets',
-                image: 'https://images.unsplash.com/photo-1588620353536-5452149b057c?q=80&w=400&auto=format&fit=crop',
-                items: ['Galaxy Tab S9', 'Galaxy Tab S9+', 'Galaxy Tab S9 Ultra', 'Galaxy Tab A9+']
-            }
-        ]
-    };
-
-    const products = [
-        { id: 1, name: 'Apple iPad 10.2 (2021) Wi-Fi 64GB', color: 'Серый космос', price: '55 000 ₽', image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?q=80&w=800&auto=format&fit=crop' },
-        { id: 2, name: 'Apple MacBook Air 13" (M1)', spec: '8GB, 256GB SSD', price: '79 990 ₽', image: 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=800&auto=format&fit=crop' },
-        { id: 3, name: 'Sony PlayStation 5 Slim', spec: 'Digital Edition', price: '49 990 ₽', image: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?q=80&w=800&auto=format&fit=crop' },
-        { id: 4, name: 'Apple Watch Series 9 45mm', spec: 'Midnight Aluminum', price: '41 990 ₽', image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=800&auto=format&fit=crop' },
-    ];
+    // Filter products based on active tab (brand)
+    const filteredProducts = products.filter(product => {
+        if (activeTab === 'Apple') {
+            // Include iPhones, iPads, Macs, Watches, AirPods if they start with "Apple" or "iPhone" or "iPad" or "Mac" or "AirPods"
+            // For now, simpler fuzzy match or category match
+            return product.name.includes('iPhone') || product.name.includes('iPad') || product.name.includes('Mac') || product.name.includes('Watch') || product.name.includes('AirPods');
+        }
+        return product.name.toLowerCase().includes(activeTab.toLowerCase());
+    });
 
     return (
         <div className="p-6 md:p-8 space-y-12 max-w-[1600px] mx-auto">
@@ -121,27 +64,35 @@ export default function Home() {
                     </div>
                 </div>
 
-                {/* Content */}
+                {/* Content - Rich Product Grid */}
                 <div className="min-h-[400px] animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    {brandContent[activeTab] ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                            {brandContent[activeTab].map((column, idx) => (
-                                <div key={idx} className="space-y-4">
-                                    <div className="group cursor-pointer">
-                                        <h3 className="text-center text-[#3bbae6] text-sm md:text-base font-medium mb-1 group-hover:underline decoration-[#3bbae6] underline-offset-4">
-                                            {column.title}
-                                        </h3>
+                    {filteredProducts.length > 0 ? (
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {filteredProducts.map((product) => (
+                                <Link key={product.id} to={`/product/${product.id}`} className="group block">
+                                    <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                        <div className="absolute inset-0 p-6 flex items-center justify-center bg-zinc-50 dark:bg-zinc-900/50">
+                                            <img
+                                                src={product.image || 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&auto=format&fit=crop&q=60'}
+                                                alt={product.name}
+                                                className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110 mix-blend-multiply dark:mix-blend-normal"
+                                            />
+                                        </div>
+                                        <div className="absolute inset-x-0 bottom-0 p-4 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm border-t border-zinc-100 dark:border-white/5">
+                                            <h3 className="text-sm font-medium text-zinc-900 dark:text-white line-clamp-1 mb-1" title={product.name}>
+                                                {product.name}
+                                            </h3>
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-sm font-bold text-[#3bbae6]">
+                                                    {new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(product.price)}
+                                                </span>
+                                                <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-white/10 flex items-center justify-center text-zinc-400 group-hover:text-[#3bbae6] transition-colors">
+                                                    <ShoppingBag size={14} />
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <ul className="space-y-1.5 px-2">
-                                        {column.items.map((item, i) => (
-                                            <li key={i}>
-                                                <a href="#" className="text-xs md:text-sm text-zinc-600 hover:text-[#3bbae6] dark:text-zinc-400 dark:hover:text-[#3bbae6] transition-colors block py-0.5">
-                                                    {item}
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+                                </Link>
                             ))}
                         </div>
                     ) : (

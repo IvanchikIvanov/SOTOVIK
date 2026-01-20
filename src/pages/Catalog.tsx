@@ -1,18 +1,28 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { products, formatPrice } from '../data/products';
 
 export default function Catalog() {
+    const { category } = useParams();
+
+    const filteredProducts = category
+        ? products.filter(p => p.category === category)
+        : products;
+
+    const title = category
+        ? category.charAt(0).toUpperCase() + category.slice(1)
+        : 'Каталог';
+
     return (
         <div className="pt-20 md:pt-12 px-4 md:px-12 min-h-screen max-w-[1440px] mx-auto">
             <div className="flex items-center justify-between mb-8 md:mb-12">
-                <h1 className="text-3xl md:text-5xl font-bold tracking-tight">Каталог</h1>
+                <h1 className="text-3xl md:text-5xl font-bold tracking-tight">{title}</h1>
                 <button className="text-sm md:text-base text-white/60 border border-white/10 px-6 py-2 rounded-full hover:bg-white/5 transition-colors">Фильтры</button>
             </div>
 
             {/* Responsive Grid: 2 cols on mobile, 3 on tablet, 4 on desktop */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 pb-24 md:pb-12">
-                {products.map((product) => (
+                {filteredProducts.map((product) => (
                     <Link key={product.id} to={`/product/${product.id}`}>
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}

@@ -10,7 +10,7 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-    // Синхронная инициализация темы из localStorage или по умолчанию 'dark'
+    // Синхронная инициализация темы из localStorage или по умолчанию 'light'
     const [theme, setTheme] = useState<Theme>(() => {
         if (typeof window !== 'undefined') {
             const saved = localStorage.getItem('theme');
@@ -24,11 +24,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
                 }
                 return saved as Theme;
             }
-            // По умолчанию 'dark'
-            window.document.documentElement.classList.add('dark');
-            return 'dark';
+            // По умолчанию 'light'
+            window.document.documentElement.classList.remove('dark');
+            return 'light';
         }
-        return 'dark';
+        return 'light';
     });
 
     useEffect(() => {

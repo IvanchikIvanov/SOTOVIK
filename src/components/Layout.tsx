@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Outlet, Link, NavLink, useLocation } from 'react-router-dom';
 import {
     Home,
@@ -12,10 +13,14 @@ import {
     Gamepad2,
     House,
     Component,
+    PanelLeftClose,
+    PanelLeftOpen,
+    Tags,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import ChatWidget from './ChatWidget';
 import { CATALOG_CATEGORIES } from '../lib/catalog';
+import { products } from '../data/products';
 
 function buildTopLinks() {
     return [
@@ -38,10 +43,42 @@ const categoryIcons = {
     accessories: Component,
 };
 
+const categoryBrands = CATALOG_CATEGORIES.reduce<Record<string, string[]>>((acc, category) => {
+    const brands = Array.from(
+        new Set(
+            products
+                .filter((product) => product.category === category.id)
+                .map((product) => product.brand)
+        )
+    ).sort((a, b) => a.localeCompare(b, 'ru-RU'));
+
+    acc[category.id] = brands;
+    return acc;
+}, {});
+
 export default function Layout() {
     const { user } = useAuth();
     const location = useLocation();
     const topLinks = buildTopLinks();
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() => {
+        if (typeof window === 'undefined') return false;
+        return localStorage.getItem('z_sidebar_collapsed') === '1';
+    });
+    const [showBrandSubmenu, setShowBrandSubmenu] = useState<boolean>(() => {
+        if (typeof window === 'undefined') return true;
+        return localStorage.getItem('z_sidebar_show_brands') !== '0';
+    });
+
+    useEffect(() => {
+        localStorage.setItem('z_sidebar_collapsed', isSidebarCollapsed ? '1' : '0');
+    }, [isSidebarCollapsed]);
+
+    useEffect(() => {
+        localStorage.setItem('z_sidebar_show_brands', showBrandSubmenu ? '1' : '0');
+    }, [showBrandSubmenu]);
+
+    const isCategoryActive = (path: string) =>
+        location.pathname === path || location.pathname.startsWith(`${path}/`);
 
     return (
         <div className="min-h-screen font-sans bg-[#f6f2eb] text-[#1f1b16] selection:bg-[#e6dbc9]">
@@ -84,6 +121,27 @@ export default function Layout() {
                 </div>
 
                 <div className="flex items-center gap-6 text-[#7f7363]">
+                    <button
+                        type="button"
+                        onClick={() => setShowBrandSubmenu((prev) => !prev)}
+                        className={`hidden lg:inline-flex items-center gap-2 rounded-[4px] border px-3 py-1.5 text-[11px] uppercase tracking-[0.09em] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${showBrandSubmenu
+                            ? 'bg-[#f2eadf] border-[#d9cdbb] text-[#5f5346]'
+                            : 'bg-[#fffdf9] border-[#ddd3c4] text-[#7e7363]'
+                            }`}
+                        title="Показать или скрыть бренды в левом меню"
+                    >
+                        <Tags size={13} />
+                        Бренды
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setIsSidebarCollapsed((prev) => !prev)}
+                        className="hidden md:inline-flex items-center gap-2 rounded-[4px] border border-[#d9cdbb] bg-[#f2eadf] px-3 py-1.5 text-[11px] uppercase tracking-[0.09em] text-[#5f5346] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[#ece2d5]"
+                        title={isSidebarCollapsed ? 'Развернуть левое меню' : 'Свернуть левое меню'}
+                    >
+                        {isSidebarCollapsed ? <PanelLeftOpen size={13} /> : <PanelLeftClose size={13} />}
+                        Меню
+                    </button>
                     <a href="tel:+79991234567" className="text-sm font-medium hover:text-[#1f1b16] transition-colors">
                         +7 (999) 123-45-67
                     </a>
@@ -113,24 +171,50 @@ export default function Layout() {
 
             <div className="flex">
                 {/* LEFT SIDEBAR (Desktop) */}
-                <aside className="hidden md:flex flex-col fixed top-14 left-0 w-64 h-[calc(100vh-56px)] p-4 z-40 overflow-y-auto bg-[#fffdf9] border-r border-[#ddd3c4]">
+                <aside
+                    className={`hidden md:flex flex-col fixed top-14 left-0 w-64 h-[calc(100vh-56px)] p-4 z-40 overflow-y-auto bg-[#fffdf9] border-r border-[#ddd3c4] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed
+                        ? '-translate-x-full opacity-0 pointer-events-none'
+                        : 'translate-x-0 opacity-100'
+                        }`}
+                >
                     <div className="mb-6 px-2">
                         <h2 className="text-lg mb-4 text-[#1f1b16] z-title" style={{ fontWeight: 600 }}>Каталог</h2>
                         <nav className="space-y-1">
                             {CATALOG_CATEGORIES.map((cat) => {
                                 const Icon = categoryIcons[cat.id];
+                                const isActive = isCategoryActive(cat.path);
+                                const brands = categoryBrands[cat.id] ?? [];
                                 return (
-                                    <NavLink
-                                        key={cat.label}
-                                        to={cat.path}
-                                        className={({ isActive }) => `flex items-center gap-3 px-3 py-2.5 rounded-[4px] text-sm transition-all ${isActive
-                                            ? 'bg-[#f1ebe2] text-[#1f1b16] border-l-2 border-[#8b6a47]'
-                                            : 'text-[#6f6354] hover:bg-[#f4eee5] hover:text-[#1f1b16]'
-                                            }`}
-                                    >
-                                        <Icon size={16} />
-                                        {cat.label}
-                                    </NavLink>
+                                    <div key={cat.label}>
+                                        <NavLink
+                                            to={cat.path}
+                                            className={`flex items-center gap-3 px-3 py-2.5 rounded-[4px] text-sm transition-all ${isActive
+                                                ? 'bg-[#f1ebe2] text-[#1f1b16] border-l-2 border-[#8b6a47]'
+                                                : 'text-[#6f6354] hover:bg-[#f4eee5] hover:text-[#1f1b16]'
+                                                }`}
+                                        >
+                                            <Icon size={16} />
+                                            {cat.label}
+                                        </NavLink>
+
+                                        <div
+                                            className={`ml-9 overflow-hidden transition-[max-height,opacity,margin] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isActive && brands.length > 0 && showBrandSubmenu
+                                                ? 'max-h-40 opacity-100 mt-1 mb-2'
+                                                : 'max-h-0 opacity-0 mt-0 mb-0'
+                                                }`}
+                                        >
+                                            <div className="border-l border-[#ddcfbd] pl-3 flex flex-col gap-1 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
+                                                {brands.map((brand) => (
+                                                    <span
+                                                        key={`${cat.id}-${brand}`}
+                                                        className="text-[11px] uppercase tracking-[0.09em] text-[#7b6f5f]"
+                                                    >
+                                                        {brand}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
                                 );
                             })}
                         </nav>
@@ -145,7 +229,12 @@ export default function Layout() {
                 </aside>
 
                 {/* MAIN CONTENT */}
-                <main className="flex-1 w-full md:pl-64 pt-14 min-h-screen">
+                <main
+                    className={`flex-1 w-full pt-14 min-h-screen transition-[padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed
+                        ? 'md:pl-0'
+                        : 'md:pl-64'
+                        }`}
+                >
                     <div className="hidden md:flex items-center justify-between px-8 py-3 border-b border-[#e3d8c9] bg-[#faf7f2] sticky top-14 z-20">
                         <div className="text-xs uppercase tracking-[0.12em] text-[#857968]">
                             Главная {'>'} {location.pathname.replace('/', '') || 'home'}

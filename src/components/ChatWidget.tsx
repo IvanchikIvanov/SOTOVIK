@@ -126,7 +126,7 @@ export default function ChatWidget() {
             <button
                 onClick={() => setIsOpen(true)}
                 className={`fixed bottom-20 md:bottom-6 right-4 md:right-6 z-50 w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 overflow-hidden
-                    bg-white border-2
+                    bg-[#fffdf9] border-2
                     ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}
                     ${isWiggling ? 'animate-wiggle' : ''}
                 `}
@@ -142,22 +142,19 @@ export default function ChatWidget() {
             <div className={`fixed bottom-20 md:bottom-6 right-4 md:right-6 z-50 w-[calc(100vw-2rem)] md:w-[400px] transition-all duration-300 origin-bottom-right
         ${isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}
       `}>
-                <div className="rounded-2xl shadow-2xl overflow-hidden border flex flex-col h-[500px]
-          bg-white border-zinc-200
-          dark:bg-zinc-900 dark:border-white/10
-        ">
+                <div className="rounded-[10px] shadow-2xl overflow-hidden border border-[#d9cebe] flex flex-col h-[500px] bg-[#fffdf9]">
                     {/* Header */}
                     <div
                         className="px-4 py-3 flex items-center justify-between border-b"
-                        style={{ backgroundColor: '#52525b', borderColor: '#3f3f46' }}
+                        style={{ backgroundColor: '#8b6a47', borderColor: '#7a5c3d' }}
                     >
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-full bg-white/25 flex items-center justify-center">
                                 <Bot size={20} className="text-white" />
                             </div>
                             <div>
                                 <h3 className="font-semibold text-white text-sm">ИИ Консультант</h3>
-                                <p className="text-xs text-zinc-300">Онлайн • SOTOVIK</p>
+                                <p className="text-xs text-[#f2e8db]">Онлайн • SOTOVIK</p>
                             </div>
                         </div>
                         <button onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white transition-colors">
@@ -166,42 +163,39 @@ export default function ChatWidget() {
                     </div>
 
                     {/* Messages */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4
-            bg-zinc-50
-            dark:bg-zinc-950
-          ">
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f7f2ea]">
                         {messages.map((msg, i) => (
                             <div key={i} className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 {msg.role === 'assistant' && (
-                                    <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-zinc-200 dark:bg-zinc-700">
-                                        <Bot size={16} className="text-zinc-600 dark:text-zinc-300" />
+                                    <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-[#e9dece]">
+                                        <Bot size={16} className="text-[#6f6354]" />
                                     </div>
                                 )}
                                 <div
                                     className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm whitespace-pre-wrap
                    ${msg.role === 'user'
                                             ? 'text-white rounded-br-md'
-                                            : 'bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 rounded-bl-md border border-zinc-200 dark:border-white/10'
+                                            : 'bg-[#fffdf9] text-[#3e352c] rounded-bl-md border border-[#dbcfbf]'
                                         }
                 `}
-                                    style={msg.role === 'user' ? { backgroundColor: '#52525b' } : {}}
+                                    style={msg.role === 'user' ? { backgroundColor: '#8b6a47' } : {}}
                                 >
                                     {msg.content}
                                 </div>
                                 {msg.role === 'user' && (
-                                    <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center flex-shrink-0">
-                                        <User size={16} className="text-zinc-600 dark:text-zinc-300" />
+                                    <div className="w-8 h-8 rounded-full bg-[#e9dece] flex items-center justify-center flex-shrink-0">
+                                        <User size={16} className="text-[#6f6354]" />
                                     </div>
                                 )}
                             </div>
                         ))}
                         {isLoading && (
                             <div className="flex gap-2 justify-start">
-                                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-zinc-200 dark:bg-zinc-700">
-                                    <Loader2 size={16} className="animate-spin text-zinc-600 dark:text-zinc-300" />
+                                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-[#e9dece]">
+                                    <Loader2 size={16} className="animate-spin text-[#6f6354]" />
                                 </div>
-                                <div className="bg-white dark:bg-zinc-800 px-4 py-2 rounded-2xl rounded-bl-md border border-zinc-200 dark:border-white/10">
-                                    <span className="text-sm text-zinc-500">Думаю...</span>
+                                <div className="bg-[#fffdf9] px-4 py-2 rounded-2xl rounded-bl-md border border-[#dbcfbf]">
+                                    <span className="text-sm text-[#7a6d5d]">Думаю...</span>
                                 </div>
                             </div>
                         )}
@@ -209,26 +203,20 @@ export default function ChatWidget() {
                     </div>
 
                     {/* Input */}
-                    <div className="p-3 border-t
-            bg-white border-zinc-200
-            dark:bg-zinc-900 dark:border-white/10
-          ">
+                    <div className="p-3 border-t bg-[#fffdf9] border-[#ddd1c2]">
                         <div className="flex gap-2">
                             <input
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyPress={handleKeyPress}
                                 placeholder="Спросите о товаре..."
-                                className="flex-1 px-4 py-2 rounded-xl text-sm outline-none transition-colors
-                  bg-zinc-100 text-zinc-900 placeholder:text-zinc-500 focus:bg-zinc-200
-                  dark:bg-zinc-800 dark:text-white dark:placeholder:text-zinc-500 dark:focus:bg-zinc-700
-                "
+                                className="flex-1 px-4 py-2 rounded-[6px] text-sm outline-none transition-colors border border-[#dbcfbf] bg-[#f8f3eb] text-[#2f2821] placeholder:text-[#8f8373] focus:bg-white"
                             />
                             <button
                                 onClick={sendMessage}
                                 disabled={isLoading || !input.trim()}
-                                className="px-4 py-2 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                style={{ backgroundColor: '#52525b' }}
+                                className="px-4 py-2 rounded-[6px] text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                style={{ backgroundColor: '#8b6a47' }}
                             >
                                 <Send size={18} />
                             </button>

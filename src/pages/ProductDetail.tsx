@@ -1,95 +1,110 @@
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Star, Share2, ShoppingCart } from 'lucide-react';
-import { products, formatPrice } from '../data/products';
+import { ArrowLeft, CheckCircle2, Copy, ShoppingCart, XCircle } from 'lucide-react';
+import { formatPrice, getAvailabilityLabel } from '../data/products';
+import { useCatalogProducts } from '../hooks/useCatalogProducts';
+import { CATEGORY_LABELS } from '../lib/catalog';
 
 export default function ProductDetail() {
     const { id } = useParams();
-    const product = products.find(p => p.id === Number(id));
+    const { products, loading } = useCatalogProducts();
+    const product = products.find((item) => item.id === Number(id));
+
+    if (loading) {
+        return (
+            <div className="min-h-screen px-4 py-20 flex items-center justify-center text-[#6b5f4f]">
+                Загружаю товар...
+            </div>
+        );
+    }
 
     if (!product) {
         return (
-            <div className="min-h-screen bg-black flex items-center justify-center text-white">
+            <div className="min-h-screen bg-[#f6f2eb] flex items-center justify-center text-[#1f1b16]">
                 <div className="text-center">
-                    <h1 className="text-2xl mb-4">Товар не найден</h1>
-                    <Link to="/" className="text-blue-400 hover:underline">Вернуться на главную</Link>
+                    <h1 className="text-2xl mb-4 z-title">Товар не найден</h1>
+                    <Link to="/" className="text-[#8b6a47] hover:underline">Вернуться на главную</Link>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-black pb-32 md:pb-0">
-
-            <div className="md:grid md:grid-cols-2 md:h-screen">
-
-                {/* LEFT: Image Section (Sticky on Desktop) */}
-                <div className="relative h-[50vh] md:h-full w-full bg-neutral-900 md:rounded-r-[40px] overflow-hidden flex items-center justify-center p-8">
+        <div className="min-h-screen pb-24 md:pb-10 px-4 md:px-8 pt-20 md:pt-8">
+            <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[1.1fr_1fr] gap-6">
+                <div className="z-shell relative overflow-hidden min-h-[360px] md:min-h-[560px] flex items-center justify-center p-8">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,#e5dccd_0%,transparent_45%)]" />
                     <img
                         src={product.image || 'https://images.unsplash.com/photo-1696446701796-da61225697cc?q=80&w=800&auto=format&fit=crop'}
                         alt={product.name}
-                        className="w-full h-full object-contain mix-blend-normal"
+                        className="relative z-10 w-full h-full object-contain"
                     />
-
-                    {/* Back Button */}
-                    <Link to="/" className="absolute top-4 left-4 p-3 bg-black/20 backdrop-blur-md rounded-full text-white hover:bg-black/40 transition-colors z-20">
-                        <ArrowLeft size={20} />
+                    <Link
+                        to="/catalog/smartphones"
+                        className="absolute top-4 left-4 z-btn-secondary !px-3 !py-2 inline-flex items-center gap-2"
+                    >
+                        <ArrowLeft size={14} /> Назад
                     </Link>
                 </div>
 
-                {/* RIGHT: Content Section (Scrollable on Desktop) */}
-                <div className="px-6 pt-8 md:p-16 md:flex md:flex-col md:justify-center max-w-2xl mx-auto space-y-8">
-
-                    <div className="flex justify-between items-start">
+                <div className="z-shell p-6 md:p-8 h-fit">
+                    <div className="flex items-start justify-between gap-3">
                         <div>
-                            <h1 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4 text-white">{product.name}</h1>
-                            <div className="flex items-center gap-2 text-yellow-500 text-sm md:text-base">
-                                <Star size={16} fill="currentColor" />
-                                <span className="text-white/60">5.0 (12 отзывов)</span>
-                            </div>
+                            <p className="text-[11px] uppercase tracking-[0.12em] text-[#7f7363] mb-2">
+                                {CATEGORY_LABELS[product.category]} • {product.brand}
+                            </p>
+                            <h1 className="text-4xl text-[#1f1b16] z-title leading-tight" style={{ fontWeight: 500 }}>
+                                {product.name}
+                            </h1>
+                            <p className="mt-2 text-sm text-[#7a6d5c]">
+                                {getAvailabilityLabel(product.availability)}
+                            </p>
                         </div>
-                        <button className="p-3 bg-white/5 rounded-full hover:bg-white/10 transition-colors text-white">
-                            <Share2 size={20} />
+                        <button
+                            type="button"
+                            className="h-9 w-9 rounded-[4px] border border-[#d4c8b7] bg-[#f7f1e8] text-[#7f7363] inline-flex items-center justify-center hover:bg-[#eee5d7]"
+                            title="Скопировать артикул"
+                            onClick={() => navigator.clipboard.writeText(product.sku)}
+                        >
+                            <Copy size={16} />
                         </button>
                     </div>
 
-                    <div className="md:hidden h-px bg-white/10 w-full" /> {/* Divider mobile only */}
-
-                    <p className="text-white/70 leading-relaxed text-lg md:text-xl font-light">
+                    <p className="mt-5 text-[#584d42] leading-relaxed">
                         {product.description}
                     </p>
 
-                    {/* Colors - Mocking color selection visually if available in spec, or just showing generic dots for now */}
-                    {/* Ideally we would parse colors from the product data or have variants. For now, we will hide it if not applicable or show simpler content. 
-                        Let's show key specs instead of just colors if we don't have variants logic yet. */}
-
-                    <div className="grid grid-cols-2 gap-4 py-2">
-                        {product.specs && Object.entries(product.specs).slice(0, 4).map(([key, value]) => (
-                            <div key={key} className="p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
-                                <span className="block text-xs text-white/40 mb-1 uppercase tracking-wider">{key}</span>
-                                <span className="font-semibold text-base text-white line-clamp-2">{value}</span>
+                    <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {Object.entries(product.specs).map(([key, value]) => (
+                            <div key={key} className="z-card p-3">
+                                <p className="text-[10px] uppercase tracking-[0.1em] text-[#8b7f6f] mb-1">{key}</p>
+                                <p className="text-sm text-[#2f2922]">{value}</p>
                             </div>
                         ))}
                     </div>
 
-                    {/* Desktop Price & Action */}
-                    <div className="hidden md:flex items-center gap-8 pt-8">
-                        <span className="text-4xl font-light text-white">{formatPrice(product.price)}</span>
-                        <button className="flex-1 bg-white text-black font-bold py-5 rounded-full hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 text-lg">
-                            В корзину <ShoppingCart size={20} />
+                    <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-2">
+                        <span className="z-chip text-[11px] px-2 py-1">Экран: {product.screenSize}</span>
+                        <span className="z-chip text-[11px] px-2 py-1">RAM: {product.ram}</span>
+                        <span className="z-chip text-[11px] px-2 py-1">Память: {product.storage}</span>
+                        <span className="z-chip text-[11px] px-2 py-1">NFC: {product.nfc ? 'Да' : 'Нет'}</span>
+                    </div>
+
+                    <div className="mt-7 pt-5 border-t border-[#e3d8c8] flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                        <div>
+                            <p className="text-xs uppercase tracking-[0.12em] text-[#8d806f]">Цена</p>
+                            <p className="text-4xl text-[#1f1b16] z-title" style={{ fontWeight: 600 }}>
+                                {formatPrice(product.price)}
+                            </p>
+                        </div>
+                        <button className="z-btn-primary inline-flex items-center justify-center gap-2 min-w-[220px]">
+                            В корзину <ShoppingCart size={16} />
                         </button>
                     </div>
+                    <div className="mt-4 text-xs text-[#7e7263] flex items-center gap-2">
+                        {product.in_stock ? <CheckCircle2 size={14} /> : <XCircle size={14} />}
+                        Артикул: {product.sku}
+                    </div>
                 </div>
-            </div>
-
-            {/* MOBILE: Fixed Bottom Action */}
-            <div className="md:hidden fixed bottom-0 left-0 w-full p-4 glass border-t border-white/10 pb-8 flex items-center justify-between gap-4 z-40 bg-black/80 backdrop-blur-xl">
-                <div className="flex flex-col">
-                    <span className="text-xs text-white/60">Итого</span>
-                    <span className="text-xl font-bold text-white">{formatPrice(product.price)}</span>
-                </div>
-                <button className="flex-1 bg-white text-black font-bold py-4 rounded-full hover:scale-105 active:scale-95 transition-all">
-                    В корзину
-                </button>
             </div>
         </div>
     );

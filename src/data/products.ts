@@ -1,270 +1,419 @@
-export interface Product {
-    id: number;
-    name: string;
-    price: number;
-    in_stock: boolean;
-    description: string;
-    specs: Record<string, string>;
-    category: string;
-    image?: string;
+import type { Product, ProductAvailability } from '../types/product';
+
+function isInStockByAvailability(availability: ProductAvailability) {
+    return availability === 'in_stock' || availability === 'warehouse';
 }
 
 export const products: Product[] = [
     {
         id: 1,
-        name: "iPhone 15 Pro Max 256GB Black Titanium",
+        sku: 'APL-IP15PM-BK-256',
+        name: 'iPhone 15 Pro Max 256GB Black Titanium',
+        brand: 'Apple',
         price: 99990,
+        oldPrice: 106990,
+        availability: 'in_stock',
         in_stock: true,
-        description: "Флагманский смартфон Apple с чипом A17 Pro, титановым корпусом и продвинутой камерой.",
+        description: 'Флагманский смартфон Apple с чипом A17 Pro, титановым корпусом и продвинутой камерой.',
         specs: {
-            "Дисплей": "6.7\" Super Retina XDR OLED",
-            "Процессор": "A17 Pro",
-            "Память": "256 GB",
-            "Камера": "48 MP + 12 MP + 12 MP",
-            "Батарея": "4422 mAh",
-            "Цвет": "Черный титан"
+            Дисплей: '6.7" Super Retina XDR OLED',
+            Процессор: 'A17 Pro',
+            Память: '256 GB',
+            Камера: '48 MP + 12 MP + 12 MP',
+            Батарея: '4422 mAh',
+            Цвет: 'Черный титан',
         },
-        category: "smartphones",
-        image: "/images/products/iphone-15-pro-max-black.jpg"
+        category: 'smartphones',
+        image: '/images/products/iphone-15-pro-max-black.jpg',
+        screenSize: '6.7"',
+        color: 'черный',
+        ram: '8 GB',
+        storage: '256 GB',
+        nfc: true,
     },
     {
         id: 2,
-        name: "iPhone 15 Pro Max 512GB Blue Titanium",
+        sku: 'APL-IP15PM-BL-512',
+        name: 'iPhone 15 Pro Max 512GB Blue Titanium',
+        brand: 'Apple',
         price: 112990,
+        availability: 'in_stock',
         in_stock: true,
-        description: "Флагманский смартфон Apple с чипом A17 Pro, титановым корпусом и продвинутой камерой.",
+        description: 'Флагманский смартфон Apple с чипом A17 Pro и 5x телекамерой.',
         specs: {
-            "Дисплей": "6.7\" Super Retina XDR OLED",
-            "Процессор": "A17 Pro",
-            "Память": "512 GB",
-            "Камера": "48 MP + 12 MP + 12 MP",
-            "Батарея": "4422 mAh",
-            "Цвет": "Синий титан"
+            Дисплей: '6.7" Super Retina XDR OLED',
+            Процессор: 'A17 Pro',
+            Память: '512 GB',
+            Камера: '48 MP + 12 MP + 12 MP',
+            Батарея: '4422 mAh',
+            Цвет: 'Синий титан',
         },
-        category: "smartphones",
-        image: "/images/products/iphone-15-pro-max-blue.jpg"
+        category: 'smartphones',
+        image: '/images/products/iphone-15-pro-max-blue.jpg',
+        screenSize: '6.7"',
+        color: 'синий',
+        ram: '8 GB',
+        storage: '512 GB',
+        nfc: true,
     },
     {
         id: 3,
-        name: "iPhone 15 Pro 128GB White Titanium",
+        sku: 'APL-IP15P-WH-128',
+        name: 'iPhone 15 Pro 128GB White Titanium',
+        brand: 'Apple',
         price: 81990,
+        availability: 'warehouse',
         in_stock: true,
-        description: "Компактный флагман с титановым дизайном и Action Button.",
+        description: 'Компактный флагман с титановым дизайном и Action Button.',
         specs: {
-            "Дисплей": "6.1\" Super Retina XDR OLED",
-            "Процессор": "A17 Pro",
-            "Память": "128 GB",
-            "Камера": "48 MP + 12 MP + 12 MP",
-            "Батарея": "3274 mAh",
-            "Цвет": "Белый титан"
+            Дисплей: '6.1" Super Retina XDR OLED',
+            Процессор: 'A17 Pro',
+            Память: '128 GB',
+            Камера: '48 MP + 12 MP + 12 MP',
+            Батарея: '3274 mAh',
+            Цвет: 'Белый титан',
         },
-        category: "smartphones",
-        image: "/images/products/iphone-15-pro-white.jpg"
+        category: 'smartphones',
+        image: '/images/products/iphone-15-pro-white.jpg',
+        screenSize: '6.1"',
+        color: 'белый',
+        ram: '8 GB',
+        storage: '128 GB',
+        nfc: true,
     },
     {
         id: 4,
-        name: "iPhone 15 Pro 256GB Natural Titanium",
-        price: 97990,
-        in_stock: true,
-        description: "Компактный флагман с титановым дизайном и Action Button.",
-        specs: {
-            "Дисплей": "6.1\" Super Retina XDR OLED",
-            "Процессор": "A17 Pro",
-            "Память": "256 GB",
-            "Камера": "48 MP + 12 MP + 12 MP",
-            "Батарея": "3274 mAh",
-            "Цвет": "Натуральный титан"
-        },
-        category: "smartphones",
-        image: "/images/products/iphone-15-pro-natural.jpg"
-    },
-    {
-        id: 13,
-        name: "iPhone 15 Pro 256GB Blue Titanium",
-        price: 94690,
-        in_stock: true,
-        description: "Компактный флагман с титановым дизайном и Action Button.",
-        specs: {
-            "Дисплей": "6.1\" Super Retina XDR OLED",
-            "Процессор": "A17 Pro",
-            "Память": "256 GB",
-            "Камера": "48 MP + 12 MP + 12 MP",
-            "Батарея": "3274 mAh",
-            "Цвет": "Синий титан"
-        },
-        category: "smartphones",
-        image: "/images/products/iphone-15-pro-blue.jpg"
-    },
-    {
-        id: 4,
-        name: "Samsung Galaxy S24 Ultra 256GB",
+        sku: 'SAM-S24U-GR-256',
+        name: 'Samsung Galaxy S24 Ultra 256GB Titanium Gray',
+        brand: 'Samsung',
         price: 119990,
-        in_stock: true,
-        description: "Топовый Android-смартфон с S Pen и 200 MP камерой.",
+        availability: 'preorder',
+        in_stock: false,
+        description: 'Топовый Android-смартфон с S Pen и камерой 200 Мп.',
         specs: {
-            "Дисплей": "6.8\" Dynamic AMOLED 2X",
-            "Процессор": "Snapdragon 8 Gen 3",
-            "Память": "256 GB",
-            "Камера": "200 MP + 12 MP + 50 MP + 10 MP",
-            "Батарея": "5000 mAh",
-            "Цвет": "Титановый серый"
+            Дисплей: '6.8" Dynamic AMOLED 2X',
+            Процессор: 'Snapdragon 8 Gen 3',
+            Память: '256 GB',
+            Камера: '200 MP + 12 MP + 50 MP + 10 MP',
+            Батарея: '5000 mAh',
+            Цвет: 'Титановый серый',
         },
-        category: "smartphones",
-        image: "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400"
+        category: 'smartphones',
+        image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=600&auto=format&fit=crop&q=80',
+        screenSize: '6.8"',
+        color: 'серый',
+        ram: '12 GB',
+        storage: '256 GB',
+        nfc: true,
     },
     {
         id: 5,
-        name: "Samsung Galaxy S24+ 256GB",
-        price: 89990,
-        in_stock: false,
-        description: "Большой экран, флагманская производительность, Galaxy AI.",
+        sku: 'XIA-14U-BK-512',
+        name: 'Xiaomi 14 Ultra 512GB',
+        brand: 'Xiaomi',
+        price: 99990,
+        availability: 'in_stock',
+        in_stock: true,
+        description: 'Флагман с камерой Leica и большим запасом производительности.',
         specs: {
-            "Дисплей": "6.7\" Dynamic AMOLED 2X",
-            "Процессор": "Snapdragon 8 Gen 3",
-            "Память": "256 GB",
-            "Камера": "50 MP + 12 MP + 10 MP",
-            "Батарея": "4900 mAh",
-            "Цвет": "Фиолетовый"
+            Дисплей: '6.73" LTPO AMOLED',
+            Процессор: 'Snapdragon 8 Gen 3',
+            Память: '512 GB',
+            Камера: '50 MP x4 (Leica)',
+            Батарея: '5000 mAh',
+            Цвет: 'Черный',
         },
-        category: "smartphones"
+        category: 'smartphones',
+        image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&auto=format&fit=crop&q=80',
+        screenSize: '6.73"',
+        color: 'черный',
+        ram: '16 GB',
+        storage: '512 GB',
+        nfc: true,
     },
     {
         id: 6,
-        name: "Samsung Galaxy Z Fold5 256GB",
-        price: 159990,
+        sku: 'GOO-PXL9-GR-128',
+        name: 'Google Pixel 9 128GB',
+        brand: 'Google',
+        price: 74990,
+        availability: 'warehouse',
         in_stock: true,
-        description: "Складной смартфон нового поколения с гибким экраном.",
+        description: 'Чистый Android и одна из лучших вычислительных камер на рынке.',
         specs: {
-            "Дисплей": "7.6\" Dynamic AMOLED 2X (внутренний)",
-            "Процессор": "Snapdragon 8 Gen 2",
-            "Память": "256 GB",
-            "Камера": "50 MP + 12 MP + 10 MP",
-            "Батарея": "4400 mAh",
-            "Цвет": "Бежевый"
+            Дисплей: '6.3" OLED',
+            Процессор: 'Google Tensor G4',
+            Память: '128 GB',
+            Камера: '50 MP + 48 MP',
+            Батарея: '4700 mAh',
+            Цвет: 'Серый',
         },
-        category: "smartphones"
+        category: 'smartphones',
+        image: 'https://images.unsplash.com/photo-1567581935884-3349723552ca?w=600&auto=format&fit=crop&q=80',
+        screenSize: '6.3"',
+        color: 'серый',
+        ram: '12 GB',
+        storage: '128 GB',
+        nfc: true,
     },
     {
         id: 7,
-        name: "Apple iPad Pro 11\" M2 256GB",
+        sku: 'APL-IPD11-SG-256',
+        name: 'Apple iPad Pro 11" M2 256GB',
+        brand: 'Apple',
         price: 89990,
+        availability: 'in_stock',
         in_stock: true,
-        description: "Профессиональный планшет с чипом M2 и ProMotion дисплеем.",
+        description: 'Профессиональный планшет для дизайна, видео и мобильной разработки.',
         specs: {
-            "Дисплей": "11\" Liquid Retina",
-            "Процессор": "Apple M2",
-            "Память": "256 GB",
-            "Камера": "12 MP + 10 MP",
-            "Связь": "Wi-Fi 6E",
-            "Цвет": "Серый космос"
+            Дисплей: '11" Liquid Retina',
+            Процессор: 'Apple M2',
+            Память: '256 GB',
+            Камера: '12 MP + 10 MP',
+            Связь: 'Wi-Fi 6E',
+            Цвет: 'Серый космос',
         },
-        category: "tablets"
+        category: 'tablets',
+        image: 'https://images.unsplash.com/photo-1542751110-97427bbecf20?w=600&auto=format&fit=crop&q=80',
+        screenSize: '11"',
+        color: 'серый',
+        ram: '8 GB',
+        storage: '256 GB',
+        nfc: false,
     },
     {
         id: 8,
-        name: "Apple MacBook Air 13\" M2 256GB",
-        price: 99990,
-        in_stock: true,
-        description: "Тонкий и легкий ноутбук с невероятной производительностью.",
+        sku: 'SAM-TABS10-8-256',
+        name: 'Samsung Galaxy Tab S10 256GB',
+        brand: 'Samsung',
+        price: 67990,
+        availability: 'preorder',
+        in_stock: false,
+        description: 'Тонкий Android-планшет с AMOLED и поддержкой S Pen.',
         specs: {
-            "Дисплей": "13.6\" Liquid Retina",
-            "Процессор": "Apple M2 (8-core)",
-            "Память": "256 GB SSD",
-            "ОЗУ": "8 GB",
-            "Батарея": "До 18 часов",
-            "Цвет": "Полночь"
+            Дисплей: '12.4" AMOLED 120Hz',
+            Процессор: 'Snapdragon 8 Gen 3',
+            Память: '256 GB',
+            Камера: '13 MP + 8 MP',
+            Батарея: '10090 mAh',
+            Цвет: 'Графит',
         },
-        category: "computers"
+        category: 'tablets',
+        image: 'https://images.unsplash.com/photo-1573867639040-6f7c2b9f1c27?w=600&auto=format&fit=crop&q=80',
+        screenSize: '12.4"',
+        color: 'черный',
+        ram: '12 GB',
+        storage: '256 GB',
+        nfc: false,
     },
     {
         id: 9,
-        name: "Apple Watch Series 9 45mm",
-        price: 42990,
+        sku: 'APL-MBA13-M2-256',
+        name: 'Apple MacBook Air 13" M2 256GB',
+        brand: 'Apple',
+        price: 99990,
+        availability: 'in_stock',
         in_stock: true,
-        description: "Умные часы с двойным тапом и ярким Always-On дисплеем.",
+        description: 'Легкий и тихий ноутбук на Apple Silicon для работы и учебы.',
         specs: {
-            "Дисплей": "45mm OLED Retina",
-            "Процессор": "S9 SiP",
-            "Водозащита": "WR50",
-            "GPS": "Да",
-            "Датчики": "ЧСС, SpO2, температура",
-            "Цвет": "Черный"
+            Дисплей: '13.6" Liquid Retina',
+            Процессор: 'Apple M2',
+            Память: '256 GB SSD',
+            ОЗУ: '8 GB',
+            Батарея: 'До 18 часов',
+            Цвет: 'Полночь',
         },
-        category: "watches"
+        category: 'computers',
+        image: 'https://images.unsplash.com/photo-1517336714739-489689fd1ca8?w=600&auto=format&fit=crop&q=80',
+        screenSize: '13.6"',
+        color: 'черный',
+        ram: '8 GB',
+        storage: '256 GB',
+        nfc: false,
     },
     {
         id: 10,
-        name: "AirPods Pro 2 (USB-C)",
-        price: 24990,
+        sku: 'LEN-LOQ15-16-512',
+        name: 'Lenovo LOQ 15 512GB',
+        brand: 'Lenovo',
+        price: 88990,
+        availability: 'warehouse',
         in_stock: true,
-        description: "Беспроводные наушники с активным шумоподавлением.",
+        description: 'Игровой ноутбук среднего класса с акцентом на охлаждение и апгрейд.',
         specs: {
-            "Тип": "Внутриканальные TWS",
-            "ANC": "Да",
-            "Чип": "H2",
-            "Автономность": "6 ч (30 ч с кейсом)",
-            "Разъем": "USB-C",
-            "Цвет": "Белый"
+            Дисплей: '15.6" IPS 144Hz',
+            Процессор: 'Intel Core i7',
+            Память: '512 GB SSD',
+            ОЗУ: '16 GB',
+            Видеокарта: 'RTX 4060',
+            Цвет: 'Серый',
         },
-        category: "audio"
+        category: 'computers',
+        image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&auto=format&fit=crop&q=80',
+        screenSize: '15.6"',
+        color: 'серый',
+        ram: '16 GB',
+        storage: '512 GB',
+        nfc: false,
     },
     {
         id: 11,
-        name: "Sony PlayStation 5 Slim",
-        price: 54990,
-        in_stock: false,
-        description: "Игровая консоль нового поколения в компактном корпусе.",
+        sku: 'APL-WAT9-BK-45',
+        name: 'Apple Watch Series 9 45mm',
+        brand: 'Apple',
+        price: 42990,
+        availability: 'in_stock',
+        in_stock: true,
+        description: 'Умные часы с обновленным чипом и расширенными фитнес-метриками.',
         specs: {
-            "Процессор": "AMD Zen 2",
-            "Графика": "AMD RDNA 2",
-            "Память": "1 TB SSD",
-            "Разрешение": "4K @ 120Hz",
-            "Привод": "Blu-ray",
-            "Цвет": "Белый"
+            Дисплей: '1.9" OLED Retina',
+            Процессор: 'S9 SiP',
+            Водозащита: 'WR50',
+            GPS: 'Да',
+            Датчики: 'ЧСС, SpO2, температура',
+            Цвет: 'Черный',
         },
-        category: "gaming"
+        category: 'watches',
+        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop&q=80',
+        screenSize: '1.9"',
+        color: 'черный',
+        ram: '2 GB',
+        storage: '64 GB',
+        nfc: true,
     },
     {
         id: 12,
-        name: "Xiaomi 14 Ultra 512GB",
-        price: 99990,
+        sku: 'APL-APP2-WH-256',
+        name: 'AirPods Pro 2 (USB-C)',
+        brand: 'Apple',
+        price: 24990,
+        availability: 'in_stock',
         in_stock: true,
-        description: "Флагман с камерой Leica и топовой начинкой.",
+        description: 'TWS-наушники с активным шумоподавлением и адаптивным аудио.',
         specs: {
-            "Дисплей": "6.73\" LTPO AMOLED",
-            "Процессор": "Snapdragon 8 Gen 3",
-            "Память": "512 GB",
-            "Камера": "50 MP x4 (Leica)",
-            "Батарея": "5000 mAh",
-            "Цвет": "Черный"
+            Тип: 'Внутриканальные TWS',
+            ANC: 'Да',
+            Чип: 'H2',
+            Автономность: '6 ч (30 ч с кейсом)',
+            Разъем: 'USB-C',
+            Цвет: 'Белый',
         },
-        category: "smartphones"
-    }
+        category: 'audio',
+        image: 'https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=600&auto=format&fit=crop&q=80',
+        screenSize: '0"',
+        color: 'белый',
+        ram: '1 GB',
+        storage: '256 GB',
+        nfc: false,
+    },
+    {
+        id: 13,
+        sku: 'SON-PS5S-WH-1TB',
+        name: 'Sony PlayStation 5 Slim',
+        brand: 'Sony',
+        price: 54990,
+        availability: 'out_of_stock',
+        in_stock: false,
+        description: 'Игровая консоль нового поколения в компактном корпусе.',
+        specs: {
+            Процессор: 'AMD Zen 2',
+            Графика: 'AMD RDNA 2',
+            Память: '1 TB SSD',
+            Разрешение: '4K @ 120Hz',
+            Привод: 'Blu-ray',
+            Цвет: 'Белый',
+        },
+        category: 'gaming',
+        image: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600&auto=format&fit=crop&q=80',
+        screenSize: '0"',
+        color: 'белый',
+        ram: '16 GB',
+        storage: '1 TB',
+        nfc: false,
+    },
+    {
+        id: 14,
+        sku: 'DYS-V15-YL-128',
+        name: 'Dyson V15 Detect Absolute',
+        brand: 'Dyson',
+        price: 69990,
+        availability: 'warehouse',
+        in_stock: true,
+        description: 'Вертикальный пылесос с лазерной подсветкой и мощной фильтрацией.',
+        specs: {
+            Мощность: '240 AW',
+            Автономность: 'до 60 минут',
+            Контейнер: '0.76 л',
+            Фильтрация: 'HEPA',
+            Цвет: 'Желтый',
+        },
+        category: 'home',
+        image: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?w=600&auto=format&fit=crop&q=80',
+        screenSize: '0"',
+        color: 'желтый',
+        ram: '2 GB',
+        storage: '64 GB',
+        nfc: false,
+    },
+    {
+        id: 15,
+        sku: 'BEL-PD65-WH-001',
+        name: 'Belkin USB-C 65W Charger',
+        brand: 'Belkin',
+        price: 6990,
+        availability: 'in_stock',
+        in_stock: true,
+        description: 'Компактная GaN-зарядка для смартфонов, планшетов и ноутбуков.',
+        specs: {
+            Мощность: '65W',
+            Порты: '2 x USB-C',
+            Протоколы: 'PD 3.0, PPS',
+            Цвет: 'Белый',
+        },
+        category: 'accessories',
+        image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600&auto=format&fit=crop&q=80',
+        screenSize: '0"',
+        color: 'белый',
+        ram: '1 GB',
+        storage: '64 GB',
+        nfc: false,
+    },
 ];
 
-// Функция для поиска товаров
 export function searchProducts(query: string): Product[] {
     const lowerQuery = query.toLowerCase();
-    return products.filter(p =>
-        p.name.toLowerCase().includes(lowerQuery) ||
-        p.description.toLowerCase().includes(lowerQuery) ||
-        p.category.toLowerCase().includes(lowerQuery)
+    return products.filter((product) =>
+        product.name.toLowerCase().includes(lowerQuery)
+        || product.description.toLowerCase().includes(lowerQuery)
+        || product.category.toLowerCase().includes(lowerQuery)
+        || product.brand.toLowerCase().includes(lowerQuery)
     );
 }
 
-// Функция для получения товаров в наличии
 export function getInStockProducts(): Product[] {
-    return products.filter(p => p.in_stock);
+    return products.filter((product) => isInStockByAvailability(product.availability));
 }
 
-// Функция для форматирования цены
 export function formatPrice(price: number): string {
-    return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(price);
+    return new Intl.NumberFormat('ru-RU', {
+        style: 'currency',
+        currency: 'RUB',
+        maximumFractionDigits: 0,
+    }).format(price);
 }
 
-// Генерация контекста для ChatGPT
+export function getAvailabilityLabel(availability: ProductAvailability): string {
+    const labels: Record<ProductAvailability, string> = {
+        in_stock: 'В наличии',
+        warehouse: 'На складе',
+        preorder: 'Под заказ',
+        out_of_stock: 'Нет в наличии',
+    };
+    return labels[availability];
+}
+
 export function getProductContext(): string {
-    return products.map(p =>
-        `- ${p.name}: ${formatPrice(p.price)}, ${p.in_stock ? 'в наличии' : 'нет в наличии'}. ${p.description}`
+    return products.map((product) =>
+        `- ${product.name}: ${formatPrice(product.price)}, ${getAvailabilityLabel(product.availability)}. ${product.description}`
     ).join('\n');
 }

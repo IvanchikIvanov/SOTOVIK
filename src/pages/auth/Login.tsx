@@ -51,21 +51,21 @@ export default function Login() {
 
   return (
     <div className="min-h-screen pt-20 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-zinc-900/50 border border-white/10 rounded-2xl p-8 backdrop-blur-xl">
+      <div className="w-full max-w-md z-shell p-8">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-white mb-2">С возвращением</h1>
-          <p className="text-zinc-400">Войдите, чтобы продолжить</p>
+          <h1 className="text-4xl z-title text-[#1f1b16] mb-2" style={{ fontWeight: 500 }}>С возвращением</h1>
+          <p className="text-[#7c705f]">Войдите, чтобы продолжить</p>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-lg text-sm">
+          <div className="mb-4 p-3 bg-[#f9eceb] border border-[#e3b1ae] text-[#a5423e] rounded-[6px] text-sm">
             {error}
           </div>
         )}
 
         <button
           onClick={handleGoogleLogin}
-          className="w-full flex items-center justify-center gap-3 bg-white text-black font-semibold py-3 rounded-xl hover:bg-zinc-200 transition-colors mb-6"
+          className="w-full flex items-center justify-center gap-3 z-btn-secondary mb-6 !text-[12px]"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -77,28 +77,28 @@ export default function Login() {
         </button>
 
         <div className="relative mb-6">
-          <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10"></div></div>
-          <div className="relative flex justify-center text-xs uppercase"><span className="bg-[#0c0c0c] px-2 text-zinc-500">Или войдите с Email</span></div>
+          <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[#e0d5c6]"></div></div>
+          <div className="relative flex justify-center text-xs uppercase"><span className="bg-[#fffdf9] px-2 text-[#8d816f]">Или войдите с Email</span></div>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-400 mb-1">Электронная почта</label>
+            <label className="block text-xs font-medium text-[#796d5d] mb-1">Электронная почта</label>
             <input
               {...register('email')}
               type="email"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-white/30 focus:outline-none transition-colors"
+              className="z-input"
               placeholder="name@example.com"
             />
             {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-400 mb-1">Пароль</label>
+            <label className="block text-xs font-medium text-[#796d5d] mb-1">Пароль</label>
             <input
               {...register('password')}
               type="password"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-white/30 focus:outline-none transition-colors"
+              className="z-input"
             />
             {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
           </div>
@@ -106,14 +106,14 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-zinc-800 text-white font-medium py-3 rounded-xl hover:bg-zinc-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full z-btn-primary disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {loading ? 'Загрузка...' : 'Войти'} <LogIn size={18} />
           </button>
         </form>
 
-        <p className="text-center mt-6 text-sm text-zinc-400">
-          Нет аккаунта? <Link to="/register" className="text-white hover:underline">Зарегистрироваться</Link>
+        <p className="text-center mt-6 text-sm text-[#7a6d5c]">
+          Нет аккаунта? <Link to="/register" className="text-[#8b6a47] hover:underline">Зарегистрироваться</Link>
         </p>
       </div>
     </div>

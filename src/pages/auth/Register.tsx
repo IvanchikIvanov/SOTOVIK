@@ -7,11 +7,11 @@ import { supabase } from '../../lib/supabase';
 import { UserPlus } from 'lucide-react';
 
 const registerSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  email: z.string().email('Неверный email адрес'),
+  password: z.string().min(6, 'Пароль должен быть минимум 6 символов'),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
+  message: 'Пароли не совпадают',
   path: ["confirmPassword"],
 });
 
@@ -37,8 +37,7 @@ export default function Register() {
     if (error) {
       setError(error.message);
     } else {
-      // Successful registration
-      alert('Registration successful! Please check your email to verify your account.');
+      alert('Регистрация успешна. Подтвердите email и войдите в аккаунт.');
       navigate('/login');
     }
     setLoading(false);
@@ -46,45 +45,45 @@ export default function Register() {
 
   return (
     <div className="min-h-screen pt-20 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-zinc-900/50 border border-white/10 rounded-2xl p-8 backdrop-blur-xl">
+      <div className="w-full max-w-md z-shell p-8">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-white mb-2">Create Account</h1>
-          <p className="text-zinc-400">Join SOTOVIK today</p>
+          <h1 className="text-4xl z-title text-[#1f1b16] mb-2" style={{ fontWeight: 500 }}>Новый аккаунт</h1>
+          <p className="text-[#7c705f]">Создайте профиль клиента SOTOVIK</p>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-lg text-sm">
+          <div className="mb-4 p-3 bg-[#f9eceb] border border-[#e3b1ae] text-[#a5423e] rounded-[6px] text-sm">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-zinc-400 mb-1">Email</label>
+            <label className="block text-xs font-medium text-[#796d5d] mb-1">Email</label>
             <input
               {...register('email')}
               type="email"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-white/30 focus:outline-none transition-colors"
+              className="z-input"
             />
             {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-400 mb-1">Password</label>
+            <label className="block text-xs font-medium text-[#796d5d] mb-1">Пароль</label>
             <input
               {...register('password')}
               type="password"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-white/30 focus:outline-none transition-colors"
+              className="z-input"
             />
             {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-400 mb-1">Confirm Password</label>
+            <label className="block text-xs font-medium text-[#796d5d] mb-1">Повторите пароль</label>
             <input
               {...register('confirmPassword')}
               type="password"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-white/30 focus:outline-none transition-colors"
+              className="z-input"
             />
             {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword.message}</p>}
           </div>
@@ -92,14 +91,14 @@ export default function Register() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-white text-black font-bold py-3 rounded-xl hover:bg-zinc-200 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full z-btn-primary disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            {loading ? 'Creating...' : 'Sign Up'} <UserPlus size={18} />
+            {loading ? 'Создание...' : 'Зарегистрироваться'} <UserPlus size={18} />
           </button>
         </form>
 
-        <p className="text-center mt-6 text-sm text-zinc-400">
-          Already have an account? <Link to="/login" className="text-white hover:underline">Log in</Link>
+        <p className="text-center mt-6 text-sm text-[#7a6d5c]">
+          Уже есть аккаунт? <Link to="/login" className="text-[#8b6a47] hover:underline">Войти</Link>
         </p>
       </div>
     </div>

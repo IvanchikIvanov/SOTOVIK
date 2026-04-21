@@ -6,3 +6,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-project-u
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+export function isSupabaseConfigured() {
+    return !supabaseUrl.includes('your-project-url') && supabaseAnonKey !== 'your-anon-key';
+}

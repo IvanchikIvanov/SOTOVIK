@@ -7,6 +7,9 @@ import Cart from './pages/Cart';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Profile from './pages/auth/Profile';
+import NotFound from './pages/NotFound';
+import AdminRoute from './components/AdminRoute';
+import AdminCatalog from './pages/admin/AdminCatalog';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 
@@ -25,6 +28,15 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="profile" element={<Profile />} />
+            <Route
+              path="admin"
+              element={(
+                <AdminRoute>
+                  <AdminCatalog />
+                </AdminRoute>
+              )}
+            />
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </AuthProvider>

@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext } from 'react';
 
-type Theme = 'dark' | 'light';
+type Theme = 'light';
 
 interface ThemeContextType {
     theme: Theme;
@@ -10,40 +10,8 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-    // Синхронная инициализация темы из localStorage или по умолчанию 'light'
-    const [theme, setTheme] = useState<Theme>(() => {
-        if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem('theme');
-            if (saved === 'dark' || saved === 'light') {
-                // Применяем класс сразу, до первого рендера
-                const root = window.document.documentElement;
-                if (saved === 'dark') {
-                    root.classList.add('dark');
-                } else {
-                    root.classList.remove('dark');
-                }
-                return saved as Theme;
-            }
-            // По умолчанию 'light'
-            window.document.documentElement.classList.remove('dark');
-            return 'light';
-        }
-        return 'light';
-    });
-
-    useEffect(() => {
-        const root = window.document.documentElement;
-        if (theme === 'dark') {
-            root.classList.add('dark');
-        } else {
-            root.classList.remove('dark');
-        }
-        localStorage.setItem('theme', theme);
-    }, [theme]);
-
-    const toggleTheme = () => {
-        setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
-    };
+    const theme: Theme = 'light';
+    const toggleTheme = () => { };
 
     return (
         <ThemeContext.Provider value={{ theme, toggleTheme }}>

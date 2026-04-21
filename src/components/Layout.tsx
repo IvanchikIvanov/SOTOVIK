@@ -15,7 +15,7 @@ import {
     Component,
     PanelLeftClose,
     PanelLeftOpen,
-    Tags,
+    ChevronDown,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import ChatWidget from './ChatWidget';
@@ -62,6 +62,12 @@ const HEADER_SLIDES = [
     new URL('../../design_new/ChatGPT Image 21 abr 2026, 18_19_31.png', import.meta.url).href,
 ];
 
+function getActiveCategoryId(pathname: string) {
+    return CATALOG_CATEGORIES.find(
+        (category) => pathname === category.path || pathname.startsWith(`${category.path}/`)
+    )?.id;
+}
+
 export default function Layout() {
     const { user } = useAuth();
     const location = useLocation();
@@ -70,19 +76,15 @@ export default function Layout() {
         if (typeof window === 'undefined') return false;
         return localStorage.getItem('z_sidebar_collapsed') === '1';
     });
-    const [showBrandSubmenu, setShowBrandSubmenu] = useState<boolean>(() => {
-        if (typeof window === 'undefined') return true;
-        return localStorage.getItem('z_sidebar_show_brands') !== '0';
-    });
     const [headerSlideIndex, setHeaderSlideIndex] = useState(0);
+    const [expandedCategories, setExpandedCategories] = useState<string[]>(() => {
+        const activeCategoryId = getActiveCategoryId(location.pathname);
+        return activeCategoryId ? [activeCategoryId] : [];
+    });
 
     useEffect(() => {
         localStorage.setItem('z_sidebar_collapsed', isSidebarCollapsed ? '1' : '0');
     }, [isSidebarCollapsed]);
-
-    useEffect(() => {
-        localStorage.setItem('z_sidebar_show_brands', showBrandSubmenu ? '1' : '0');
-    }, [showBrandSubmenu]);
 
     useEffect(() => {
         const timer = window.setInterval(() => {
@@ -91,8 +93,25 @@ export default function Layout() {
         return () => window.clearInterval(timer);
     }, []);
 
+    useEffect(() => {
+        const activeCategoryId = getActiveCategoryId(location.pathname);
+        if (!activeCategoryId) return;
+
+        setExpandedCategories((prev) =>
+            prev.includes(activeCategoryId) ? prev : [...prev, activeCategoryId]
+        );
+    }, [location.pathname]);
+
     const isCategoryActive = (path: string) =>
         location.pathname === path || location.pathname.startsWith(`${path}/`);
+
+    const toggleCategoryBrands = (categoryId: string) => {
+        setExpandedCategories((prev) =>
+            prev.includes(categoryId)
+                ? prev.filter((id) => id !== categoryId)
+                : [...prev, categoryId]
+        );
+    };
 
     return (
         <div className="min-h-screen font-sans bg-[#f6f2eb] text-[#1f1b16] selection:bg-[#e6dbc9]">
@@ -100,13 +119,13 @@ export default function Layout() {
             {/* MOBILE HEADER */}
             <header className="md:hidden fixed top-0 w-full z-50 h-16 flex items-center justify-between px-4 bg-[#fffdf9]/95 border-b border-[#ddd3c4] backdrop-blur">
                 <Link to="/" className="flex items-center">
-                    <div className="relative h-12 w-48 overflow-hidden">
+                    <div className="relative h-14 w-56 overflow-hidden">
                         {HEADER_SLIDES.map((slide, index) => (
                             <img
                                 key={`header-mobile-${slide}`}
                                 src={slide}
-                                alt={`SOTOVIK ${index + 1}`}
-                                className="absolute inset-0 h-full w-full object-contain transition-opacity duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                                alt={`ZABERG ${index + 1}`}
+                                className="absolute inset-0 h-full w-full object-contain origin-left scale-[1.22] transition-opacity duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
                                 style={{ opacity: headerSlideIndex === index ? 1 : 0 }}
                             />
                         ))}
@@ -125,13 +144,13 @@ export default function Layout() {
             <header className="hidden md:flex fixed top-0 w-full z-50 h-20 items-center justify-between px-6 bg-[#fffdf9]/95 border-b border-[#ddd3c4] backdrop-blur">
                 <div className="flex items-center gap-8">
                     <Link to="/" className="flex items-center">
-                        <div className="relative h-16 w-80 overflow-hidden">
+                        <div className="relative h-[72px] w-[360px] overflow-hidden">
                             {HEADER_SLIDES.map((slide, index) => (
                                 <img
                                     key={`header-desktop-${slide}`}
                                     src={slide}
-                                    alt={`SOTOVIK ${index + 1}`}
-                                    className="absolute inset-0 h-full w-full object-contain transition-opacity duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                                    alt={`ZABERG ${index + 1}`}
+                                    className="absolute inset-0 h-full w-full object-contain origin-left scale-[1.22] transition-opacity duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
                                     style={{ opacity: headerSlideIndex === index ? 1 : 0 }}
                                 />
                             ))}
@@ -188,7 +207,7 @@ export default function Layout() {
                     className={`hidden md:flex flex-col fixed top-20 left-0 h-[calc(100vh-80px)] z-40 overflow-hidden bg-[#fffdf9] border-r border-[#ddd3c4] transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'w-12' : 'w-64'}`}
                 >
                     {/* Sidebar controls */}
-                    <div className={`flex items-center gap-2 border-b border-[#ece3d4] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-4 py-3'}`}>
+                    <div className={`flex items-center border-b border-[#ece3d4] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'justify-center p-2' : 'justify-start px-4 py-3'}`}>
                         <button
                             type="button"
                             onClick={() => setIsSidebarCollapsed((prev) => !prev)}
@@ -196,15 +215,6 @@ export default function Layout() {
                             title={isSidebarCollapsed ? 'Развернуть левое меню' : 'Свернуть левое меню'}
                         >
                             {isSidebarCollapsed ? <PanelLeftOpen size={14} /> : <PanelLeftClose size={14} />}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setShowBrandSubmenu((prev) => !prev)}
-                            className={`inline-flex items-center gap-2 overflow-hidden whitespace-nowrap rounded-[4px] border px-3 h-8 text-[11px] uppercase tracking-[0.09em] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'opacity-0 pointer-events-none max-w-0 p-0 border-transparent' : 'opacity-100 max-w-[160px]'} ${showBrandSubmenu ? 'bg-[#f2eadf] border-[#d9cdbb] text-[#5f5346]' : 'bg-[#fffdf9] border-[#ddd3c4] text-[#7e7363]'}`}
-                            title="Показать или скрыть бренды в левом меню"
-                        >
-                            <Tags size={13} />
-                            Бренды
                         </button>
                     </div>
 
@@ -216,26 +226,48 @@ export default function Layout() {
                                 const Icon = categoryIcons[cat.id];
                                 const isActive = isCategoryActive(cat.path);
                                 const brands = categoryBrands[cat.id] ?? [];
+                                const isExpanded = expandedCategories.includes(cat.id);
                                 return (
                                     <div key={cat.label}>
-                                        <NavLink
-                                            to={cat.path}
-                                            className={`flex items-center gap-3 px-3 py-2.5 rounded-[4px] text-sm transition-all ${isActive
-                                                ? 'bg-[#f1ebe2] text-[#1f1b16] border-l-2 border-[#8b6a47]'
-                                                : 'text-[#6f6354] hover:bg-[#f4eee5] hover:text-[#1f1b16]'
-                                                }`}
-                                        >
-                                            <Icon size={16} />
-                                            {cat.label}
-                                        </NavLink>
+                                        <div className="relative">
+                                            <NavLink
+                                                to={cat.path}
+                                                className={`flex items-center gap-3 px-3 py-2.5 pr-10 rounded-[4px] text-sm transition-all ${isActive
+                                                    ? 'bg-[#f1ebe2] text-[#1f1b16] border-l-2 border-[#8b6a47]'
+                                                    : 'text-[#6f6354] hover:bg-[#f4eee5] hover:text-[#1f1b16]'
+                                                    }`}
+                                            >
+                                                <Icon size={16} />
+                                                {cat.label}
+                                            </NavLink>
+
+                                            {brands.length > 0 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={(event) => {
+                                                        event.preventDefault();
+                                                        event.stopPropagation();
+                                                        toggleCategoryBrands(cat.id);
+                                                    }}
+                                                    className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-6 w-6 items-center justify-center rounded-[4px] text-[#6f6354] transition-colors hover:bg-[#efe6da] hover:text-[#1f1b16]"
+                                                    aria-label={isExpanded ? `Свернуть бренды ${cat.label}` : `Развернуть бренды ${cat.label}`}
+                                                    aria-expanded={isExpanded}
+                                                >
+                                                    <ChevronDown
+                                                        size={14}
+                                                        className={`transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'rotate-180' : ''}`}
+                                                    />
+                                                </button>
+                                            )}
+                                        </div>
 
                                         <div
-                                            className={`ml-9 overflow-hidden transition-[max-height,opacity,margin] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isActive && brands.length > 0 && showBrandSubmenu
-                                                ? 'max-h-40 opacity-100 mt-1 mb-2'
-                                                : 'max-h-0 opacity-0 mt-0 mb-0'
+                                            className={`ml-9 grid overflow-hidden transition-[grid-template-rows,opacity,margin] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded && brands.length > 0
+                                                ? 'grid-rows-[1fr] opacity-100 mt-1 mb-2'
+                                                : 'grid-rows-[0fr] opacity-0 mt-0 mb-0'
                                                 }`}
                                         >
-                                            <div className="border-l border-[#ddcfbd] pl-3 flex flex-col gap-1 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
+                                            <div className="min-h-0 border-l border-[#ddcfbd] pl-3 flex flex-col gap-1 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
                                                 {brands.map((brand) => (
                                                     <span
                                                         key={`${cat.id}-${brand}`}

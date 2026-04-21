@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import ProductFilters from '../components/ProductFilters';
@@ -7,7 +7,7 @@ import { useProductFilters } from '../hooks/useProductFilters';
 
 export default function Home() {
     const { products, loading } = useCatalogProducts();
-    const [activeBrand, setActiveBrand] = useState<string>('all');
+    const [activeBrand, setActiveBrand] = useState<string>('');
 
     const {
         filters,
@@ -20,10 +20,19 @@ export default function Home() {
         clearFilters,
     } = useProductFilters(products);
 
-    const brands = useMemo(() => ['all', ...new Set(products.map((product) => product.brand))], [products]);
+    const brands = useMemo(() => [...new Set(products.map((product) => product.brand))], [products]);
+
+    useEffect(() => {
+        if (brands.length === 0) {
+            setActiveBrand('');
+            return;
+        }
+
+        setActiveBrand((prev) => (prev && brands.includes(prev) ? prev : brands[0]));
+    }, [brands]);
 
     const featuredProducts = useMemo(() => {
-        if (activeBrand === 'all') return filteredProducts.slice(0, 8);
+        if (!activeBrand) return filteredProducts.slice(0, 8);
         return filteredProducts.filter((product) => product.brand === activeBrand).slice(0, 8);
     }, [activeBrand, filteredProducts]);
 
@@ -72,7 +81,7 @@ export default function Home() {
                                     : 'bg-[#fffdf9] border-[#d9cebe] text-[#6d5f4f] hover:bg-[#f4eee4]'
                                     }`}
                             >
-                                {brand === 'all' ? 'Все' : brand}
+                                {brand}
                             </button>
                         ))}
                     </div>

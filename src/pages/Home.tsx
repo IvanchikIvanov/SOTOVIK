@@ -1,13 +1,28 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import ProductFilters from '../components/ProductFilters';
 import { useCatalogProducts } from '../hooks/useCatalogProducts';
 import { useProductFilters } from '../hooks/useProductFilters';
 
+const HERO_SLIDES = [
+    new URL('../../design_new/ChatGPT Image 21 abr 2026, 18_16_04.png', import.meta.url).href,
+    new URL('../../design_new/ChatGPT Image 21 abr 2026, 18_17_43.png', import.meta.url).href,
+    new URL('../../design_new/ChatGPT Image 21 abr 2026, 18_19_31.png', import.meta.url).href,
+];
+
 export default function Home() {
     const { products, loading } = useCatalogProducts();
     const [activeBrand, setActiveBrand] = useState<string>('all');
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    useEffect(() => {
+        const timer = window.setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+        }, 5200);
+
+        return () => window.clearInterval(timer);
+    }, []);
 
     const {
         filters,
@@ -29,19 +44,43 @@ export default function Home() {
 
     return (
         <div className="px-4 md:px-8 py-6 md:py-8 space-y-8 max-w-[1600px] mx-auto">
-            <section className="z-shell relative overflow-hidden p-6 md:p-12">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_30%,#e8dfd0_0%,transparent_45%)]" />
+            <section className="z-shell relative overflow-hidden p-6 md:p-12 min-h-[260px] md:min-h-[340px]">
+                {HERO_SLIDES.map((slide, index) => (
+                    <img
+                        key={slide}
+                        src={slide}
+                        alt={`Zaberg hero ${index + 1}`}
+                        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                        style={{ opacity: currentSlide === index ? 1 : 0 }}
+                    />
+                ))}
+                <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(18,14,10,0.62)_0%,rgba(18,14,10,0.34)_42%,rgba(18,14,10,0.12)_100%)]" />
                 <div className="relative z-10 max-w-2xl">
-                    <p className="text-[11px] uppercase tracking-[0.14em] text-[#8d806f] mb-2">Новая коллекция</p>
-                    <h1 className="z-title text-4xl md:text-6xl text-[#1f1b16] leading-[0.95]" style={{ fontWeight: 500 }}>
+                    <p className="text-[11px] uppercase tracking-[0.14em] text-[#e5d8c7] mb-2">Новая коллекция</p>
+                    <h1 className="z-title text-4xl md:text-6xl text-white leading-[0.95]" style={{ fontWeight: 500 }}>
                         Каталог премиум техники
                     </h1>
-                    <p className="mt-4 text-sm md:text-base text-[#6c6050]">
+                    <p className="mt-4 text-sm md:text-base text-[#f0e4d5]">
                         Выберите устройство по точным параметрам: размер, память, RAM, NFC, наличие и цене.
                     </p>
                     <div className="mt-6 flex gap-3">
                         <Link to="/catalog/smartphones" className="z-btn-primary inline-flex items-center">Смотреть каталог</Link>
                         <Link to="/profile" className="z-btn-secondary inline-flex items-center">Перейти в кабинет</Link>
+                    </div>
+                    <div className="mt-5 flex items-center gap-2">
+                        {HERO_SLIDES.map((slide, index) => (
+                            <button
+                                key={`dot-${slide}`}
+                                type="button"
+                                onClick={() => setCurrentSlide(index)}
+                                className="h-1.5 rounded-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                                style={{
+                                    width: currentSlide === index ? 26 : 10,
+                                    background: currentSlide === index ? '#ffffff' : 'rgba(255,255,255,0.42)',
+                                }}
+                                aria-label={`Показать слайд ${index + 1}`}
+                            />
+                        ))}
                     </div>
                 </div>
             </section>

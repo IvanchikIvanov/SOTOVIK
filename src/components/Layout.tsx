@@ -218,6 +218,26 @@ export default function Layout() {
                         </button>
                     </div>
 
+                    <div
+                        className={`w-full border-b border-[#ece3d4] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'px-1 py-2.5' : 'px-3 py-3.5'}`}
+                    >
+                        <Link to="/" className="flex w-full items-center justify-center">
+                            <div
+                                className={`relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'h-8 w-8' : 'h-14 w-full max-w-[220px]'}`}
+                            >
+                                {HEADER_SLIDES.map((slide, index) => (
+                                    <img
+                                        key={`sidebar-logo-${slide}`}
+                                        src={slide}
+                                        alt={`ZABERG ${index + 1}`}
+                                        className="absolute inset-0 h-full w-full object-contain origin-center scale-[1.18] transition-opacity duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                                        style={{ opacity: headerSlideIndex === index ? 1 : 0 }}
+                                    />
+                                ))}
+                            </div>
+                        </Link>
+                    </div>
+
                     <div className={`flex-1 min-h-0 flex flex-col overflow-y-auto transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
                     <div className="mb-6 px-2 pt-4">
                         <h2 className="text-lg mb-4 text-[#1f1b16] z-title px-2" style={{ fontWeight: 600 }}>Каталог</h2>

@@ -18,7 +18,6 @@ import {
     ChevronDown,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import ChatWidget from './ChatWidget';
 import { CATALOG_CATEGORIES } from '../lib/catalog';
 import { products } from '../data/products';
 
@@ -284,12 +283,6 @@ export default function Layout() {
                         </nav>
                     </div>
 
-                    <div className="mt-auto px-4 pb-4">
-                        <div className="p-3 rounded-[6px] border border-[#dccfbf] bg-[#f3ece3]">
-                            <span className="text-[11px] uppercase tracking-[0.1em] text-[#826f58] block mb-1">Новинка</span>
-                            <span className="text-sm text-[#2b241d]">Apple Vision Pro</span>
-                        </div>
-                    </div>
                     </div>
                 </aside>
 
@@ -332,8 +325,6 @@ export default function Layout() {
                 </div>
             </nav>
 
-            {/* AI Chat Widget */}
-            <ChatWidget />
         </div>
     );
 }

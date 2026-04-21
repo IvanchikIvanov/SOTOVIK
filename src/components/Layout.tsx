@@ -56,6 +56,12 @@ const categoryBrands = CATALOG_CATEGORIES.reduce<Record<string, string[]>>((acc,
     return acc;
 }, {});
 
+const HEADER_SLIDES = [
+    new URL('../../design_new/ChatGPT Image 21 abr 2026, 18_16_04.png', import.meta.url).href,
+    new URL('../../design_new/ChatGPT Image 21 abr 2026, 18_17_43.png', import.meta.url).href,
+    new URL('../../design_new/ChatGPT Image 21 abr 2026, 18_19_31.png', import.meta.url).href,
+];
+
 export default function Layout() {
     const { user } = useAuth();
     const location = useLocation();
@@ -68,6 +74,7 @@ export default function Layout() {
         if (typeof window === 'undefined') return true;
         return localStorage.getItem('z_sidebar_show_brands') !== '0';
     });
+    const [headerSlideIndex, setHeaderSlideIndex] = useState(0);
 
     useEffect(() => {
         localStorage.setItem('z_sidebar_collapsed', isSidebarCollapsed ? '1' : '0');
@@ -76,6 +83,13 @@ export default function Layout() {
     useEffect(() => {
         localStorage.setItem('z_sidebar_show_brands', showBrandSubmenu ? '1' : '0');
     }, [showBrandSubmenu]);
+
+    useEffect(() => {
+        const timer = window.setInterval(() => {
+            setHeaderSlideIndex((prev) => (prev + 1) % HEADER_SLIDES.length);
+        }, 4800);
+        return () => window.clearInterval(timer);
+    }, []);
 
     const isCategoryActive = (path: string) =>
         location.pathname === path || location.pathname.startsWith(`${path}/`);
@@ -86,7 +100,17 @@ export default function Layout() {
             {/* MOBILE HEADER */}
             <header className="md:hidden fixed top-0 w-full z-50 h-14 flex items-center justify-between px-4 bg-[#fffdf9]/95 border-b border-[#ddd3c4] backdrop-blur">
                 <Link to="/" className="flex items-center">
-                    <img src="/logoLight.svg" alt="SOTOVIK" className="h-8 object-contain" />
+                    <div className="relative h-8 w-28 overflow-hidden rounded-[4px] border border-[#d8cdbd] bg-[#f1e9dc]">
+                        {HEADER_SLIDES.map((slide, index) => (
+                            <img
+                                key={`header-mobile-${slide}`}
+                                src={slide}
+                                alt={`SOTOVIK ${index + 1}`}
+                                className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                                style={{ opacity: headerSlideIndex === index ? 1 : 0 }}
+                            />
+                        ))}
+                    </div>
                 </Link>
 
                 <div className="flex items-center gap-4">
@@ -101,7 +125,17 @@ export default function Layout() {
             <header className="hidden md:flex fixed top-0 w-full z-50 h-14 items-center justify-between px-6 bg-[#fffdf9]/95 border-b border-[#ddd3c4] backdrop-blur">
                 <div className="flex items-center gap-8">
                     <Link to="/" className="flex items-center">
-                        <img src="/logoLight.svg" alt="SOTOVIK" className="h-10 object-contain" />
+                        <div className="relative h-10 w-44 overflow-hidden rounded-[6px] border border-[#d8cdbd] bg-[#f1e9dc]">
+                            {HEADER_SLIDES.map((slide, index) => (
+                                <img
+                                    key={`header-desktop-${slide}`}
+                                    src={slide}
+                                    alt={`SOTOVIK ${index + 1}`}
+                                    className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                                    style={{ opacity: headerSlideIndex === index ? 1 : 0 }}
+                                />
+                            ))}
+                        </div>
                     </Link>
 
                     <nav className="flex gap-6">

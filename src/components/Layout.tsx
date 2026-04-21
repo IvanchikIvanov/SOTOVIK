@@ -98,9 +98,9 @@ export default function Layout() {
         <div className="min-h-screen font-sans bg-[#f6f2eb] text-[#1f1b16] selection:bg-[#e6dbc9]">
 
             {/* MOBILE HEADER */}
-            <header className="md:hidden fixed top-0 w-full z-50 h-14 flex items-center justify-between px-4 bg-[#fffdf9]/95 border-b border-[#ddd3c4] backdrop-blur">
+            <header className="md:hidden fixed top-0 w-full z-50 h-16 flex items-center justify-between px-4 bg-[#fffdf9]/95 border-b border-[#ddd3c4] backdrop-blur">
                 <Link to="/" className="flex items-center">
-                    <div className="relative h-9 w-36 overflow-hidden">
+                    <div className="relative h-12 w-48 overflow-hidden">
                         {HEADER_SLIDES.map((slide, index) => (
                             <img
                                 key={`header-mobile-${slide}`}
@@ -122,10 +122,10 @@ export default function Layout() {
             </header>
 
             {/* DESKTOP HEADER */}
-            <header className="hidden md:flex fixed top-0 w-full z-50 h-14 items-center justify-between px-6 bg-[#fffdf9]/95 border-b border-[#ddd3c4] backdrop-blur">
+            <header className="hidden md:flex fixed top-0 w-full z-50 h-20 items-center justify-between px-6 bg-[#fffdf9]/95 border-b border-[#ddd3c4] backdrop-blur">
                 <div className="flex items-center gap-8">
                     <Link to="/" className="flex items-center">
-                        <div className="relative h-12 w-60 overflow-hidden">
+                        <div className="relative h-16 w-80 overflow-hidden">
                             {HEADER_SLIDES.map((slide, index) => (
                                 <img
                                     key={`header-desktop-${slide}`}
@@ -155,27 +155,6 @@ export default function Layout() {
                 </div>
 
                 <div className="flex items-center gap-6 text-[#7f7363]">
-                    <button
-                        type="button"
-                        onClick={() => setShowBrandSubmenu((prev) => !prev)}
-                        className={`hidden lg:inline-flex items-center gap-2 rounded-[4px] border px-3 py-1.5 text-[11px] uppercase tracking-[0.09em] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${showBrandSubmenu
-                            ? 'bg-[#f2eadf] border-[#d9cdbb] text-[#5f5346]'
-                            : 'bg-[#fffdf9] border-[#ddd3c4] text-[#7e7363]'
-                            }`}
-                        title="Показать или скрыть бренды в левом меню"
-                    >
-                        <Tags size={13} />
-                        Бренды
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setIsSidebarCollapsed((prev) => !prev)}
-                        className="hidden md:inline-flex items-center gap-2 rounded-[4px] border border-[#d9cdbb] bg-[#f2eadf] px-3 py-1.5 text-[11px] uppercase tracking-[0.09em] text-[#5f5346] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[#ece2d5]"
-                        title={isSidebarCollapsed ? 'Развернуть левое меню' : 'Свернуть левое меню'}
-                    >
-                        {isSidebarCollapsed ? <PanelLeftOpen size={13} /> : <PanelLeftClose size={13} />}
-                        Меню
-                    </button>
                     <a href="tel:+79991234567" className="text-sm font-medium hover:text-[#1f1b16] transition-colors">
                         +7 (999) 123-45-67
                     </a>
@@ -206,13 +185,32 @@ export default function Layout() {
             <div className="flex">
                 {/* LEFT SIDEBAR (Desktop) */}
                 <aside
-                    className={`hidden md:flex flex-col fixed top-14 left-0 w-64 h-[calc(100vh-56px)] p-4 z-40 overflow-y-auto bg-[#fffdf9] border-r border-[#ddd3c4] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed
-                        ? '-translate-x-full opacity-0 pointer-events-none'
-                        : 'translate-x-0 opacity-100'
-                        }`}
+                    className={`hidden md:flex flex-col fixed top-20 left-0 h-[calc(100vh-80px)] z-40 overflow-hidden bg-[#fffdf9] border-r border-[#ddd3c4] transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'w-12' : 'w-64'}`}
                 >
-                    <div className="mb-6 px-2">
-                        <h2 className="text-lg mb-4 text-[#1f1b16] z-title" style={{ fontWeight: 600 }}>Каталог</h2>
+                    {/* Sidebar controls */}
+                    <div className={`flex items-center gap-2 border-b border-[#ece3d4] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'justify-center p-2' : 'justify-between px-4 py-3'}`}>
+                        <button
+                            type="button"
+                            onClick={() => setIsSidebarCollapsed((prev) => !prev)}
+                            className="inline-flex items-center justify-center h-8 w-8 rounded-[4px] border border-[#d9cdbb] bg-[#f2eadf] text-[#5f5346] transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[#ece2d5]"
+                            title={isSidebarCollapsed ? 'Развернуть левое меню' : 'Свернуть левое меню'}
+                        >
+                            {isSidebarCollapsed ? <PanelLeftOpen size={14} /> : <PanelLeftClose size={14} />}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setShowBrandSubmenu((prev) => !prev)}
+                            className={`inline-flex items-center gap-2 overflow-hidden whitespace-nowrap rounded-[4px] border px-3 h-8 text-[11px] uppercase tracking-[0.09em] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'opacity-0 pointer-events-none max-w-0 p-0 border-transparent' : 'opacity-100 max-w-[160px]'} ${showBrandSubmenu ? 'bg-[#f2eadf] border-[#d9cdbb] text-[#5f5346]' : 'bg-[#fffdf9] border-[#ddd3c4] text-[#7e7363]'}`}
+                            title="Показать или скрыть бренды в левом меню"
+                        >
+                            <Tags size={13} />
+                            Бренды
+                        </button>
+                    </div>
+
+                    <div className={`flex-1 min-h-0 flex flex-col overflow-y-auto transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                    <div className="mb-6 px-2 pt-4">
+                        <h2 className="text-lg mb-4 text-[#1f1b16] z-title px-2" style={{ fontWeight: 600 }}>Каталог</h2>
                         <nav className="space-y-1">
                             {CATALOG_CATEGORIES.map((cat) => {
                                 const Icon = categoryIcons[cat.id];
@@ -254,22 +252,23 @@ export default function Layout() {
                         </nav>
                     </div>
 
-                    <div className="mt-auto px-2">
+                    <div className="mt-auto px-4 pb-4">
                         <div className="p-3 rounded-[6px] border border-[#dccfbf] bg-[#f3ece3]">
                             <span className="text-[11px] uppercase tracking-[0.1em] text-[#826f58] block mb-1">Новинка</span>
                             <span className="text-sm text-[#2b241d]">Apple Vision Pro</span>
                         </div>
                     </div>
+                    </div>
                 </aside>
 
                 {/* MAIN CONTENT */}
                 <main
-                    className={`flex-1 w-full pt-14 min-h-screen transition-[padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed
-                        ? 'md:pl-0'
+                    className={`flex-1 w-full pt-16 md:pt-20 min-h-screen transition-[padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed
+                        ? 'md:pl-12'
                         : 'md:pl-64'
                         }`}
                 >
-                    <div className="hidden md:flex items-center justify-between px-8 py-3 border-b border-[#e3d8c9] bg-[#faf7f2] sticky top-14 z-20">
+                    <div className="hidden md:flex items-center justify-between px-8 py-3 border-b border-[#e3d8c9] bg-[#faf7f2] sticky top-20 z-20">
                         <div className="text-xs uppercase tracking-[0.12em] text-[#857968]">
                             Главная {'>'} {location.pathname.replace('/', '') || 'home'}
                         </div>

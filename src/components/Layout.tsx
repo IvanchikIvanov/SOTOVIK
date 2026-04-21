@@ -100,13 +100,13 @@ export default function Layout() {
             {/* MOBILE HEADER */}
             <header className="md:hidden fixed top-0 w-full z-50 h-14 flex items-center justify-between px-4 bg-[#fffdf9]/95 border-b border-[#ddd3c4] backdrop-blur">
                 <Link to="/" className="flex items-center">
-                    <div className="relative h-8 w-28 overflow-hidden rounded-[4px] border border-[#d8cdbd] bg-[#f1e9dc]">
+                    <div className="relative h-9 w-36 overflow-hidden">
                         {HEADER_SLIDES.map((slide, index) => (
                             <img
                                 key={`header-mobile-${slide}`}
                                 src={slide}
                                 alt={`SOTOVIK ${index + 1}`}
-                                className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                                className="absolute inset-0 h-full w-full object-contain transition-opacity duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
                                 style={{ opacity: headerSlideIndex === index ? 1 : 0 }}
                             />
                         ))}
@@ -125,13 +125,13 @@ export default function Layout() {
             <header className="hidden md:flex fixed top-0 w-full z-50 h-14 items-center justify-between px-6 bg-[#fffdf9]/95 border-b border-[#ddd3c4] backdrop-blur">
                 <div className="flex items-center gap-8">
                     <Link to="/" className="flex items-center">
-                        <div className="relative h-10 w-44 overflow-hidden rounded-[6px] border border-[#d8cdbd] bg-[#f1e9dc]">
+                        <div className="relative h-12 w-60 overflow-hidden">
                             {HEADER_SLIDES.map((slide, index) => (
                                 <img
                                     key={`header-desktop-${slide}`}
                                     src={slide}
                                     alt={`SOTOVIK ${index + 1}`}
-                                    className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                                    className="absolute inset-0 h-full w-full object-contain transition-opacity duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
                                     style={{ opacity: headerSlideIndex === index ? 1 : 0 }}
                                 />
                             ))}

@@ -50,7 +50,7 @@ export default function Home() {
                     </p>
                     <div className="mt-6 flex gap-3">
                         <Link to="/catalog/smartphones" className="z-btn-primary inline-flex items-center">Смотреть каталог</Link>
-                        <Link to="/profile" className="z-btn-secondary inline-flex items-center">Перейти в кабинет</Link>
+                        <Link to="/cart" className="z-btn-secondary inline-flex items-center">Моя корзина</Link>
                     </div>
                 </div>
             </section>

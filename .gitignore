@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Claude Code local state
+.claude/
+
+# Local design drafts (keep PNGs used by the app, exclude scratch HTMLs)
+design_new/*.html
+

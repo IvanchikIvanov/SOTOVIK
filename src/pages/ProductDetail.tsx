@@ -1,13 +1,21 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, Copy, ShoppingCart, XCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Copy, ShoppingCart, XCircle, Zap, Check } from 'lucide-react';
 import { formatPrice, getAvailabilityLabel } from '../data/products';
 import { useCatalogProducts } from '../hooks/useCatalogProducts';
 import { CATEGORY_LABELS } from '../lib/catalog';
+import { useCart } from '../context/CartContext';
+import BuyForm from '../components/BuyForm';
+import { buildItemFromProduct } from '../lib/orders';
 
 export default function ProductDetail() {
     const { id } = useParams();
     const { products, loading } = useCatalogProducts();
     const product = products.find((item) => item.id === Number(id));
+    const { addItem, items } = useCart();
+    const [buyOpen, setBuyOpen] = useState(false);
+    const [justAdded, setJustAdded] = useState(false);
+    const inCart = product ? items.some((it) => it.productId === product.id) : false;
 
     if (loading) {
         return (
@@ -89,16 +97,34 @@ export default function ProductDetail() {
                         <span className="z-chip text-[11px] px-2 py-1">NFC: {product.nfc ? 'Да' : 'Нет'}</span>
                     </div>
 
-                    <div className="mt-7 pt-5 border-t border-[#e3d8c8] flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                    <div className="mt-7 pt-5 border-t border-[#e3d8c8] flex flex-col gap-4">
                         <div>
                             <p className="text-xs uppercase tracking-[0.12em] text-[#8d806f]">Цена</p>
                             <p className="text-4xl text-[#1f1b16] z-title" style={{ fontWeight: 600 }}>
                                 {formatPrice(product.price)}
                             </p>
                         </div>
-                        <button className="z-btn-primary inline-flex items-center justify-center gap-2 min-w-[220px]">
-                            В корзину <ShoppingCart size={16} />
-                        </button>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setBuyOpen(true)}
+                                disabled={!product.in_stock}
+                                className="z-btn-primary inline-flex items-center justify-center gap-2 min-w-[200px] disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                <Zap size={16} /> Купить сейчас
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    addItem(product.id, 1);
+                                    setJustAdded(true);
+                                    setTimeout(() => setJustAdded(false), 1400);
+                                }}
+                                className={`z-btn-secondary inline-flex items-center justify-center gap-2 min-w-[200px] transition-colors ${justAdded || inCart ? '!bg-[#e9f1e1] !border-[#bbd1a7] !text-[#3f6b2f]' : ''}`}
+                            >
+                                {justAdded || inCart ? <><Check size={16} /> В корзине</> : <><ShoppingCart size={16} /> В корзину</>}
+                            </button>
+                        </div>
                     </div>
                     <div className="mt-4 text-xs text-[#7e7263] flex items-center gap-2">
                         {product.in_stock ? <CheckCircle2 size={14} /> : <XCircle size={14} />}
@@ -106,6 +132,14 @@ export default function ProductDetail() {
                     </div>
                 </div>
             </div>
+
+            <BuyForm
+                open={buyOpen}
+                onClose={() => setBuyOpen(false)}
+                items={buildItemFromProduct(product)}
+                source="buy_now"
+                title={`Заказ: ${product.name}`}
+            />
         </div>
     );
 }

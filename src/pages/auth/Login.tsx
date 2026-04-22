@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 
 import { LogIn } from 'lucide-react';
@@ -34,7 +34,7 @@ export default function Login() {
     if (error) {
       setError(error.message);
     } else {
-      navigate('/profile');
+      navigate('/admin');
     }
     setLoading(false);
   };
@@ -43,7 +43,7 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/profile`
+        redirectTo: `${window.location.origin}/admin`
       }
     });
     if (error) setError(error.message);
@@ -112,8 +112,8 @@ export default function Login() {
           </button>
         </form>
 
-        <p className="text-center mt-6 text-sm text-[#7a6d5c]">
-          Нет аккаунта? <Link to="/register" className="text-[#8b6a47] hover:underline">Зарегистрироваться</Link>
+        <p className="text-center mt-6 text-xs text-[#9c8f7c]">
+          Вход для администраторов.
         </p>
       </div>
     </div>

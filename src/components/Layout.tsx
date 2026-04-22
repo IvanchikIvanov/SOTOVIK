@@ -4,7 +4,7 @@ import {
     Home,
     Grid,
     ShoppingBag,
-    User,
+    Phone,
     Smartphone,
     Tablet,
     Monitor,
@@ -19,7 +19,7 @@ import {
     Menu,
     X,
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 import { CATALOG_CATEGORIES } from '../lib/catalog';
 import { products } from '../data/products';
 
@@ -70,7 +70,7 @@ function getActiveCategoryId(pathname: string) {
 }
 
 export default function Layout() {
-    const { user } = useAuth();
+    const { count: cartCount } = useCart();
     const location = useLocation();
     const topLinks = buildTopLinks();
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() => {
@@ -162,7 +162,11 @@ export default function Layout() {
                 <div className="flex items-center gap-4">
                     <Link to="/cart" className="text-[#786b5a] hover:text-[#1f1b16] relative transition-colors">
                         <ShoppingBag size={20} />
-                        <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#1f1b16] text-white text-[9px] font-medium">0</span>
+                        {cartCount > 0 && (
+                            <span className="absolute -top-1 -right-2 min-w-[16px] h-4 px-1 inline-flex items-center justify-center rounded-full bg-[#1f1b16] text-white text-[9px] font-medium">
+                                {cartCount}
+                            </span>
+                        )}
                     </Link>
                 </div>
             </header>
@@ -205,25 +209,13 @@ export default function Layout() {
                         +7 (999) 123-45-67
                     </a>
 
-                    {user ? (
-                        <Link to="/profile" className="hover:text-[#1f1b16] flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-[#e8dfd1] overflow-hidden border border-[#d7ccbb]">
-                                {user.user_metadata.avatar_url ? (
-                                    <img src={user.user_metadata.avatar_url} alt="Ava" className="w-full h-full object-cover" />
-                                ) : (
-                                    <User size={14} className="m-1" />
-                                )}
-                            </div>
-                        </Link>
-                    ) : (
-                        <Link to="/login" className="hover:text-[#1f1b16] flex items-center gap-2">
-                            <User size={18} />
-                        </Link>
-                    )}
-
                     <Link to="/cart" className="hover:text-[#1f1b16] relative">
                         <ShoppingBag size={18} />
-                        <span className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-[#1f1b16] text-white text-[8px] font-medium">0</span>
+                        {cartCount > 0 && (
+                            <span className="absolute -top-1 -right-2 min-w-[14px] h-[14px] px-1 inline-flex items-center justify-center rounded-full bg-[#1f1b16] text-white text-[9px] font-medium">
+                                {cartCount}
+                            </span>
+                        )}
                     </Link>
                 </div>
             </header>
@@ -446,14 +438,19 @@ export default function Layout() {
                         <Grid size={20} />
                         <span className="text-[10px] mt-1">Catalog</span>
                     </Link>
-                    <Link to="/cart" className="flex flex-col items-center justify-center text-[#6f6354] transition-colors">
+                    <Link to="/cart" className="relative flex flex-col items-center justify-center text-[#6f6354] transition-colors">
                         <ShoppingBag size={20} />
+                        {cartCount > 0 && (
+                            <span className="absolute top-1 right-4 min-w-[16px] h-4 px-1 inline-flex items-center justify-center rounded-full bg-[#1f1b16] text-white text-[9px] font-medium">
+                                {cartCount}
+                            </span>
+                        )}
                         <span className="text-[10px] mt-1">Cart</span>
                     </Link>
-                    <Link to={user ? "/profile" : "/login"} className="flex flex-col items-center justify-center text-[#6f6354] transition-colors">
-                        <User size={20} />
-                        <span className="text-[10px] mt-1">{user ? 'Profile' : 'Login'}</span>
-                    </Link>
+                    <a href="tel:+79991234567" className="flex flex-col items-center justify-center text-[#6f6354] transition-colors">
+                        <Phone size={20} />
+                        <span className="text-[10px] mt-1">Звонок</span>
+                    </a>
                 </div>
             </nav>
 

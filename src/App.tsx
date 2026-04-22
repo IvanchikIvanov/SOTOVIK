@@ -5,40 +5,40 @@ import Catalog from './pages/Catalog';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
-import Profile from './pages/auth/Profile';
 import NotFound from './pages/NotFound';
 import AdminRoute from './components/AdminRoute';
 import AdminCatalog from './pages/admin/AdminCatalog';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { CartProvider } from './context/CartContext';
 
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="catalog" element={<Catalog />} />
-            <Route path="catalog/:category" element={<Catalog />} />
-            <Route path="product/:id" element={<ProductDetail />} />
-            <Route path="cart" element={<Cart />} />
+        <CartProvider>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="catalog" element={<Catalog />} />
+              <Route path="catalog/:category" element={<Catalog />} />
+              <Route path="product/:id" element={<ProductDetail />} />
+              <Route path="cart" element={<Cart />} />
 
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
-            <Route path="profile" element={<Profile />} />
-            <Route
-              path="admin"
-              element={(
-                <AdminRoute>
-                  <AdminCatalog />
-                </AdminRoute>
-              )}
-            />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
+              {/* Admin-only login entry (not linked from user-facing UI). */}
+              <Route path="login" element={<Login />} />
+              <Route
+                path="admin"
+                element={(
+                  <AdminRoute>
+                    <AdminCatalog />
+                  </AdminRoute>
+                )}
+              />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
+        </CartProvider>
       </AuthProvider>
     </ThemeProvider>
   );

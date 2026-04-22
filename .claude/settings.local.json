@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /c/Sites/ZABERG log --oneline -10)",
+      "Bash(git -C /c/Sites/ZABERG show --stat ed7f12a)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(npx tsc *)"
+    ]
+  }
+}

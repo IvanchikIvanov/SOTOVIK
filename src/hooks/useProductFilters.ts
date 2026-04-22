@@ -30,9 +30,12 @@ export function useProductFilters(sourceProducts: Product[]) {
 
     useEffect(() => {
         const serialized = serializeFilters(filters, bounds);
-        const serializedString = serialized.toString();
-        if (serializedString !== searchParams.toString()) {
-            setSearchParams(serialized, { replace: true });
+        const next = new URLSearchParams(searchParams);
+        const managedKeys = ['sizes', 'colors', 'ram', 'storage', 'availability', 'nfc', 'priceMin', 'priceMax'];
+        managedKeys.forEach((key) => next.delete(key));
+        serialized.forEach((value, key) => next.set(key, value));
+        if (next.toString() !== searchParams.toString()) {
+            setSearchParams(next, { replace: true });
         }
     }, [bounds, filters, searchParams, setSearchParams]);
 

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import ProductFilters from '../components/ProductFilters';
 import { useCatalogProducts } from '../hooks/useCatalogProducts';
@@ -9,6 +9,8 @@ import type { ProductCategory } from '../types/product';
 
 export default function Catalog() {
     const { category } = useParams();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const brandFilter = searchParams.get('brand');
     const { products, loading, source } = useCatalogProducts();
 
     const title = category
@@ -16,9 +18,18 @@ export default function Catalog() {
         : 'Каталог';
 
     const pageProducts = useMemo(
-        () => (category ? products.filter((product) => product.category === category) : products),
-        [category, products]
+        () => {
+            const byCategory = category ? products.filter((product) => product.category === category) : products;
+            return brandFilter ? byCategory.filter((product) => product.brand === brandFilter) : byCategory;
+        },
+        [category, products, brandFilter]
     );
+
+    const clearBrand = () => {
+        const next = new URLSearchParams(searchParams);
+        next.delete('brand');
+        setSearchParams(next, { replace: true });
+    };
 
     const {
         filters,
@@ -77,6 +88,15 @@ export default function Catalog() {
                     <p className="mt-2 text-sm text-[#7f7363]">
                         {filteredProducts.length} товаров • источник: {source === 'supabase' ? 'Supabase' : 'локальная база'}
                     </p>
+                    {brandFilter && (
+                        <button
+                            type="button"
+                            onClick={clearBrand}
+                            className="mt-3 inline-flex items-center gap-2 rounded-[4px] border border-[#b9a884] bg-[#ece0c6] px-3 py-1 text-[11px] uppercase tracking-[0.1em] text-[#5c4d32] transition-colors hover:bg-[#e3d5b6]"
+                        >
+                            Бренд: {brandFilter} ✕
+                        </button>
+                    )}
                 </div>
                 <div className="flex flex-wrap gap-2">
                     {topBrands.map(([brand, count]) => (

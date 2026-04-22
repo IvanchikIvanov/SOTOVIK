@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Outlet, Link, NavLink, useLocation } from 'react-router-dom';
 import {
     Home,
@@ -13,9 +13,11 @@ import {
     Gamepad2,
     House,
     Component,
-    PanelLeftClose,
-    PanelLeftOpen,
+    ChevronLeft,
+    ChevronRight,
     ChevronDown,
+    Menu,
+    X,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { CATALOG_CATEGORIES } from '../lib/catalog';
@@ -80,6 +82,12 @@ export default function Layout() {
         const activeCategoryId = getActiveCategoryId(location.pathname);
         return activeCategoryId ? [activeCategoryId] : [];
     });
+    const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+
+    const activeBrand = useMemo(() => {
+        const params = new URLSearchParams(location.search);
+        return params.get('brand');
+    }, [location.search]);
 
     useEffect(() => {
         localStorage.setItem('z_sidebar_collapsed', isSidebarCollapsed ? '1' : '0');
@@ -101,6 +109,18 @@ export default function Layout() {
         );
     }, [location.pathname]);
 
+    // Close mobile drawer on route change
+    useEffect(() => {
+        setIsMobileDrawerOpen(false);
+    }, [location.pathname, location.search]);
+
+    // Lock body scroll while drawer open
+    useEffect(() => {
+        if (typeof document === 'undefined') return;
+        document.body.style.overflow = isMobileDrawerOpen ? 'hidden' : '';
+        return () => { document.body.style.overflow = ''; };
+    }, [isMobileDrawerOpen]);
+
     const isCategoryActive = (path: string) =>
         location.pathname === path || location.pathname.startsWith(`${path}/`);
 
@@ -116,9 +136,17 @@ export default function Layout() {
         <div className="min-h-screen font-sans bg-[#f6f2eb] text-[#1f1b16] selection:bg-[#e6dbc9]">
 
             {/* MOBILE HEADER */}
-            <header className="md:hidden fixed top-0 w-full z-50 h-16 flex items-center justify-between px-4 bg-[#fffdf9]/95 border-b border-[#ddd3c4] backdrop-blur">
-                <Link to="/" className="flex items-center">
-                    <div className="relative h-14 w-56 overflow-hidden">
+            <header className="md:hidden fixed top-0 w-full z-50 h-16 flex items-center justify-between px-3 bg-[#fffdf9]/95 border-b border-[#ddd3c4] backdrop-blur">
+                <button
+                    type="button"
+                    onClick={() => setIsMobileDrawerOpen(true)}
+                    className="inline-flex items-center justify-center h-10 w-10 rounded-[4px] text-[#5f5346] transition-colors hover:bg-[#f2eadf]"
+                    aria-label="Открыть меню"
+                >
+                    <Menu size={22} />
+                </button>
+                <Link to="/" className="flex items-center flex-1 justify-center">
+                    <div className="relative h-12 w-48 overflow-hidden">
                         {HEADER_SLIDES.map((slide, index) => (
                             <img
                                 key={`header-mobile-${slide}`}
@@ -203,93 +231,103 @@ export default function Layout() {
             <div className="flex">
                 {/* LEFT SIDEBAR (Desktop) */}
                 <aside
-                    className={`hidden md:flex flex-col fixed top-20 left-0 h-[calc(100vh-80px)] z-40 overflow-hidden bg-[#fffdf9] border-r border-[#ddd3c4] transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'w-12' : 'w-64'}`}
+                    className={`hidden md:block fixed top-20 left-0 h-[calc(100vh-80px)] z-40 bg-[#fffdf9] border-r border-[#ddd3c4] transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'w-0 border-r-0' : 'w-64'}`}
                 >
-                    {/* Sidebar controls */}
-                    <div className={`flex items-center border-b border-[#ece3d4] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'justify-center p-2' : 'justify-start px-4 py-3'}`}>
-                        <button
-                            type="button"
-                            onClick={() => setIsSidebarCollapsed((prev) => !prev)}
-                            className="inline-flex items-center justify-center h-8 w-8 rounded-[4px] border border-[#d9cdbb] bg-[#f2eadf] text-[#5f5346] transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[#ece2d5]"
-                            title={isSidebarCollapsed ? 'Развернуть левое меню' : 'Свернуть левое меню'}
-                        >
-                            {isSidebarCollapsed ? <PanelLeftOpen size={14} /> : <PanelLeftClose size={14} />}
-                        </button>
-                    </div>
-
-                    <div className={`flex-1 min-h-0 flex flex-col overflow-y-auto transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-                    <div className="mb-6 px-2 pt-4">
-                        <h2 className="text-lg mb-4 text-[#1f1b16] z-title px-2" style={{ fontWeight: 600 }}>Каталог</h2>
-                        <nav className="space-y-1">
-                            {CATALOG_CATEGORIES.map((cat) => {
-                                const Icon = categoryIcons[cat.id];
-                                const isActive = isCategoryActive(cat.path);
-                                const brands = categoryBrands[cat.id] ?? [];
-                                const isExpanded = expandedCategories.includes(cat.id);
-                                return (
-                                    <div key={cat.label}>
-                                        <div className="relative">
-                                            <NavLink
-                                                to={cat.path}
-                                                className={`flex items-center gap-3 px-3 py-2.5 pr-10 rounded-[4px] text-sm transition-all ${isActive
-                                                    ? 'bg-[#f1ebe2] text-[#1f1b16] border-l-2 border-[#8b6a47]'
-                                                    : 'text-[#6f6354] hover:bg-[#f4eee5] hover:text-[#1f1b16]'
-                                                    }`}
-                                            >
-                                                <Icon size={16} />
-                                                {cat.label}
-                                            </NavLink>
-
-                                            {brands.length > 0 && (
-                                                <button
-                                                    type="button"
-                                                    onClick={(event) => {
-                                                        event.preventDefault();
-                                                        event.stopPropagation();
-                                                        toggleCategoryBrands(cat.id);
-                                                    }}
-                                                    className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-6 w-6 items-center justify-center rounded-[4px] text-[#6f6354] transition-colors hover:bg-[#efe6da] hover:text-[#1f1b16]"
-                                                    aria-label={isExpanded ? `Свернуть бренды ${cat.label}` : `Развернуть бренды ${cat.label}`}
-                                                    aria-expanded={isExpanded}
-                                                >
-                                                    <ChevronDown
-                                                        size={14}
-                                                        className={`transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'rotate-180' : ''}`}
-                                                    />
-                                                </button>
-                                            )}
-                                        </div>
-
-                                        <div
-                                            className={`ml-9 grid overflow-hidden transition-[grid-template-rows,opacity,margin] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded && brands.length > 0
-                                                ? 'grid-rows-[1fr] opacity-100 mt-1 mb-2'
-                                                : 'grid-rows-[0fr] opacity-0 mt-0 mb-0'
-                                                }`}
-                                        >
-                                            <div className="min-h-0 border-l border-[#ddcfbd] pl-3 flex flex-col gap-1 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
-                                                {brands.map((brand) => (
-                                                    <span
-                                                        key={`${cat.id}-${brand}`}
-                                                        className="text-[11px] uppercase tracking-[0.09em] text-[#7b6f5f]"
+                    <div className={`h-full flex flex-col overflow-hidden transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                        <div className="flex-1 min-h-0 flex flex-col overflow-y-auto">
+                            <div className="mb-6 px-2 pt-4">
+                                <h2 className="text-lg mb-4 text-[#1f1b16] z-title px-2" style={{ fontWeight: 600 }}>Каталог</h2>
+                                <nav className="space-y-1">
+                                    {CATALOG_CATEGORIES.map((cat) => {
+                                        const Icon = categoryIcons[cat.id];
+                                        const isActive = isCategoryActive(cat.path);
+                                        const brands = categoryBrands[cat.id] ?? [];
+                                        const isExpanded = expandedCategories.includes(cat.id);
+                                        return (
+                                            <div key={cat.label}>
+                                                <div className="relative">
+                                                    <NavLink
+                                                        to={cat.path}
+                                                        end
+                                                        className={`flex items-center gap-3 px-3 py-2.5 pr-10 rounded-[4px] text-sm transition-all ${isActive && !activeBrand
+                                                            ? 'bg-[#f1ebe2] text-[#1f1b16] border-l-2 border-[#8b6a47]'
+                                                            : 'text-[#6f6354] hover:bg-[#f4eee5] hover:text-[#1f1b16]'
+                                                            }`}
                                                     >
-                                                        {brand}
-                                                    </span>
-                                                ))}
+                                                        <Icon size={16} />
+                                                        {cat.label}
+                                                    </NavLink>
+
+                                                    {brands.length > 0 && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={(event) => {
+                                                                event.preventDefault();
+                                                                event.stopPropagation();
+                                                                toggleCategoryBrands(cat.id);
+                                                            }}
+                                                            className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-6 w-6 items-center justify-center rounded-[4px] text-[#6f6354] transition-colors hover:bg-[#efe6da] hover:text-[#1f1b16]"
+                                                            aria-label={isExpanded ? `Свернуть бренды ${cat.label}` : `Развернуть бренды ${cat.label}`}
+                                                            aria-expanded={isExpanded}
+                                                        >
+                                                            <ChevronDown
+                                                                size={14}
+                                                                className={`transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'rotate-180' : ''}`}
+                                                            />
+                                                        </button>
+                                                    )}
+                                                </div>
+
+                                                <div
+                                                    className={`ml-9 grid overflow-hidden transition-[grid-template-rows,opacity,margin] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded && brands.length > 0
+                                                        ? 'grid-rows-[1fr] opacity-100 mt-1 mb-2'
+                                                        : 'grid-rows-[0fr] opacity-0 mt-0 mb-0'
+                                                        }`}
+                                                >
+                                                    <div className="min-h-0 border-l border-[#ddcfbd] pl-2 flex flex-col gap-0.5 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
+                                                        {brands.map((brand) => {
+                                                            const isBrandActive = isActive && activeBrand === brand;
+                                                            return (
+                                                                <Link
+                                                                    key={`${cat.id}-${brand}`}
+                                                                    to={`${cat.path}?brand=${encodeURIComponent(brand)}`}
+                                                                    className={`text-[11px] uppercase tracking-[0.09em] px-2 py-1 rounded-[3px] transition-colors ${isBrandActive
+                                                                        ? 'bg-[#ece0c6] text-[#3f351f]'
+                                                                        : 'text-[#7b6f5f] hover:bg-[#f4eee5] hover:text-[#1f1b16]'
+                                                                        }`}
+                                                                >
+                                                                    {brand}
+                                                                </Link>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </nav>
+                                        );
+                                    })}
+                                </nav>
+                            </div>
+                        </div>
                     </div>
 
-                    </div>
                 </aside>
+
+                {/* Sidebar collapse tab (desktop only) */}
+                <button
+                    type="button"
+                    onClick={() => setIsSidebarCollapsed((prev) => !prev)}
+                    className={`hidden md:flex fixed top-[152px] z-50 items-center justify-center h-14 w-6 rounded-r-[6px] border border-l-0 border-[#d9cdbb] bg-[#f2eadf] text-[#5f5346] shadow-[2px_2px_8px_rgba(60,40,15,0.10)] transition-[left,background-color,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[#ece2d5] hover:text-[#1f1b16]`}
+                    style={{ left: isSidebarCollapsed ? 0 : 256 }}
+                    title={isSidebarCollapsed ? 'Развернуть левое меню' : 'Свернуть левое меню'}
+                    aria-label={isSidebarCollapsed ? 'Развернуть левое меню' : 'Свернуть левое меню'}
+                >
+                    {isSidebarCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+                </button>
 
                 {/* MAIN CONTENT */}
                 <main
                     className={`flex-1 w-full pt-16 md:pt-20 min-h-screen transition-[padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isSidebarCollapsed
-                        ? 'md:pl-12'
+                        ? 'md:pl-0'
                         : 'md:pl-64'
                         }`}
                 >
@@ -301,6 +339,100 @@ export default function Layout() {
                     </div>
                     <Outlet />
                 </main>
+            </div>
+
+            {/* MOBILE DRAWER */}
+            <div
+                className={`md:hidden fixed inset-0 z-[60] transition-opacity duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${isMobileDrawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+                aria-hidden={!isMobileDrawerOpen}
+            >
+                <div
+                    className="absolute inset-0 bg-[#1f1b16]/40 backdrop-blur-[2px]"
+                    onClick={() => setIsMobileDrawerOpen(false)}
+                />
+                <aside
+                    className={`absolute top-0 left-0 h-full w-[84%] max-w-[320px] bg-[#fffdf9] shadow-[4px_0_24px_rgba(60,40,15,0.18)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isMobileDrawerOpen ? 'translate-x-0' : '-translate-x-full'} flex flex-col`}
+                >
+                    <div className="flex items-center justify-between px-4 h-16 border-b border-[#ece3d4]">
+                        <span className="z-title text-base text-[#1f1b16]" style={{ fontWeight: 600 }}>Каталог</span>
+                        <button
+                            type="button"
+                            onClick={() => setIsMobileDrawerOpen(false)}
+                            className="inline-flex items-center justify-center h-9 w-9 rounded-[4px] text-[#5f5346] transition-colors hover:bg-[#f2eadf]"
+                            aria-label="Закрыть меню"
+                        >
+                            <X size={18} />
+                        </button>
+                    </div>
+                    <div className="flex-1 overflow-y-auto py-4">
+                        <nav className="space-y-1 px-2">
+                            {CATALOG_CATEGORIES.map((cat) => {
+                                const Icon = categoryIcons[cat.id];
+                                const isActive = isCategoryActive(cat.path);
+                                const brands = categoryBrands[cat.id] ?? [];
+                                const isExpanded = expandedCategories.includes(cat.id);
+                                return (
+                                    <div key={`m-${cat.label}`}>
+                                        <div className="relative">
+                                            <NavLink
+                                                to={cat.path}
+                                                end
+                                                className={`flex items-center gap-3 px-3 py-2.5 pr-10 rounded-[4px] text-sm transition-all ${isActive && !activeBrand
+                                                    ? 'bg-[#f1ebe2] text-[#1f1b16] border-l-2 border-[#8b6a47]'
+                                                    : 'text-[#6f6354] hover:bg-[#f4eee5] hover:text-[#1f1b16]'
+                                                    }`}
+                                            >
+                                                <Icon size={16} />
+                                                {cat.label}
+                                            </NavLink>
+                                            {brands.length > 0 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={(event) => {
+                                                        event.preventDefault();
+                                                        event.stopPropagation();
+                                                        toggleCategoryBrands(cat.id);
+                                                    }}
+                                                    className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-[4px] text-[#6f6354] transition-colors hover:bg-[#efe6da]"
+                                                    aria-expanded={isExpanded}
+                                                >
+                                                    <ChevronDown
+                                                        size={14}
+                                                        className={`transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'rotate-180' : ''}`}
+                                                    />
+                                                </button>
+                                            )}
+                                        </div>
+                                        <div
+                                            className={`ml-9 grid overflow-hidden transition-[grid-template-rows,opacity,margin] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded && brands.length > 0
+                                                ? 'grid-rows-[1fr] opacity-100 mt-1 mb-2'
+                                                : 'grid-rows-[0fr] opacity-0 mt-0 mb-0'
+                                                }`}
+                                        >
+                                            <div className="min-h-0 border-l border-[#ddcfbd] pl-2 flex flex-col gap-0.5">
+                                                {brands.map((brand) => {
+                                                    const isBrandActive = isActive && activeBrand === brand;
+                                                    return (
+                                                        <Link
+                                                            key={`m-${cat.id}-${brand}`}
+                                                            to={`${cat.path}?brand=${encodeURIComponent(brand)}`}
+                                                            className={`text-[11px] uppercase tracking-[0.09em] px-2 py-1 rounded-[3px] transition-colors ${isBrandActive
+                                                                ? 'bg-[#ece0c6] text-[#3f351f]'
+                                                                : 'text-[#7b6f5f] hover:bg-[#f4eee5] hover:text-[#1f1b16]'
+                                                                }`}
+                                                        >
+                                                            {brand}
+                                                        </Link>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </nav>
+                    </div>
+                </aside>
             </div>
 
             {/* MOBILE BOTTOM NAV */}

@@ -57,12 +57,6 @@ const categoryBrands = CATALOG_CATEGORIES.reduce<Record<string, string[]>>((acc,
     return acc;
 }, {});
 
-const HEADER_SLIDES = [
-    new URL('../../design_new/ChatGPT Image 21 abr 2026, 18_16_04.png', import.meta.url).href,
-    new URL('../../design_new/ChatGPT Image 21 abr 2026, 18_17_43.png', import.meta.url).href,
-    new URL('../../design_new/ChatGPT Image 21 abr 2026, 18_19_31.png', import.meta.url).href,
-];
-
 function getActiveCategoryId(pathname: string) {
     return CATALOG_CATEGORIES.find(
         (category) => pathname === category.path || pathname.startsWith(`${category.path}/`)
@@ -77,7 +71,6 @@ export default function Layout() {
         if (typeof window === 'undefined') return false;
         return localStorage.getItem('z_sidebar_collapsed') === '1';
     });
-    const [headerSlideIndex, setHeaderSlideIndex] = useState(0);
     const [expandedCategories, setExpandedCategories] = useState<string[]>(() => {
         const activeCategoryId = getActiveCategoryId(location.pathname);
         return activeCategoryId ? [activeCategoryId] : [];
@@ -92,13 +85,6 @@ export default function Layout() {
     useEffect(() => {
         localStorage.setItem('z_sidebar_collapsed', isSidebarCollapsed ? '1' : '0');
     }, [isSidebarCollapsed]);
-
-    useEffect(() => {
-        const timer = window.setInterval(() => {
-            setHeaderSlideIndex((prev) => (prev + 1) % HEADER_SLIDES.length);
-        }, 4800);
-        return () => window.clearInterval(timer);
-    }, []);
 
     useEffect(() => {
         const activeCategoryId = getActiveCategoryId(location.pathname);
@@ -146,17 +132,7 @@ export default function Layout() {
                     <Menu size={22} />
                 </button>
                 <Link to="/" className="flex items-center flex-1 justify-center">
-                    <div className="relative h-12 w-48 overflow-hidden">
-                        {HEADER_SLIDES.map((slide, index) => (
-                            <img
-                                key={`header-mobile-${slide}`}
-                                src={slide}
-                                alt={`ZABERG ${index + 1}`}
-                                className="absolute inset-0 h-full w-full object-contain origin-left scale-[1.22] transition-opacity duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
-                                style={{ opacity: headerSlideIndex === index ? 1 : 0 }}
-                            />
-                        ))}
-                    </div>
+                    <span className="z-wordmark text-[22px] leading-none">ZABERG</span>
                 </Link>
 
                 <div className="flex items-center gap-4">
@@ -175,17 +151,7 @@ export default function Layout() {
             <header className="hidden md:flex fixed top-0 w-full z-50 h-20 items-center justify-between px-6 bg-[#fffdf9]/95 border-b border-[#ddd3c4] backdrop-blur">
                 <div className="flex items-center gap-8">
                     <Link to="/" className="flex items-center">
-                        <div className="relative h-[72px] w-[360px] overflow-hidden">
-                            {HEADER_SLIDES.map((slide, index) => (
-                                <img
-                                    key={`header-desktop-${slide}`}
-                                    src={slide}
-                                    alt={`ZABERG ${index + 1}`}
-                                    className="absolute inset-0 h-full w-full object-contain origin-left scale-[1.22] transition-opacity duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
-                                    style={{ opacity: headerSlideIndex === index ? 1 : 0 }}
-                                />
-                            ))}
-                        </div>
+                        <span className="z-wordmark text-[30px] leading-none">ZABERG</span>
                     </Link>
 
                     <nav className="flex gap-6">

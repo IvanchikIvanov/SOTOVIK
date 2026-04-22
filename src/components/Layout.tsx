@@ -274,7 +274,7 @@ export default function Layout() {
                 <button
                     type="button"
                     onClick={() => setIsSidebarCollapsed((prev) => !prev)}
-                    className={`hidden md:flex fixed top-[152px] z-50 items-center justify-center h-14 w-6 rounded-r-[6px] border border-l-0 border-[#d9cdbb] bg-[#f2eadf] text-[#5f5346] shadow-[2px_2px_8px_rgba(60,40,15,0.10)] transition-[left,background-color,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[#ece2d5] hover:text-[#1f1b16]`}
+                    className={`hidden md:flex fixed top-[152px] z-50 items-center justify-center h-14 w-6 rounded-r-[6px] border border-l-0 border-[#ddd3c4] bg-[#fffdf9] text-[#6f6354] shadow-[4px_2px_10px_rgba(60,40,15,0.08)] transition-[left,background-color,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[#f4eee5] hover:text-[#1f1b16]`}
                     style={{ left: isSidebarCollapsed ? 0 : 256 }}
                     title={isSidebarCollapsed ? 'Развернуть левое меню' : 'Свернуть левое меню'}
                     aria-label={isSidebarCollapsed ? 'Развернуть левое меню' : 'Свернуть левое меню'}

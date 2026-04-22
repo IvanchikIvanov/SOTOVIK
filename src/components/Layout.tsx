@@ -270,12 +270,21 @@ export default function Layout() {
 
                 </aside>
 
-                {/* Sidebar collapse tab (desktop only) */}
+                {/* Sidebar collapse tab: fixed left uses same spacing scale as w-64 / pl-64; vertical center in area below header */}
                 <button
                     type="button"
                     onClick={() => setIsSidebarCollapsed((prev) => !prev)}
-                    className={`hidden md:flex fixed top-[152px] z-50 items-center justify-center h-14 w-6 rounded-r-[6px] border border-l-0 border-[#ddd3c4] bg-[#fffdf9] text-[#6f6354] shadow-[4px_2px_10px_rgba(60,40,15,0.08)] transition-[left,background-color,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[#f4eee5] hover:text-[#1f1b16]`}
-                    style={{ left: isSidebarCollapsed ? 0 : 256 }}
+                    className={[
+                        'hidden md:flex fixed z-50 items-center justify-center h-14 w-6',
+                        'top-[calc(5rem+(100vh-5rem)/2)] -translate-y-1/2',
+                        'border border-[#ddd3c4] bg-[#fffdf9] text-[#6f6354]',
+                        'shadow-[2px_2px_10px_rgba(60,40,15,0.07)]',
+                        'transition-[left,transform,background-color,color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
+                        'hover:bg-[#f4eee5] hover:text-[#1f1b16]',
+                        isSidebarCollapsed
+                            ? 'left-0 translate-x-0 rounded-l-none rounded-r-[6px] border-l-0'
+                            : 'left-64 -translate-x-1/2 rounded-l-none rounded-r-[6px] border-l-0',
+                    ].join(' ')}
                     title={isSidebarCollapsed ? 'Развернуть левое меню' : 'Свернуть левое меню'}
                     aria-label={isSidebarCollapsed ? 'Развернуть левое меню' : 'Свернуть левое меню'}
                 >

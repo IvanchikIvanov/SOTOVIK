@@ -39,28 +39,26 @@ export default function BrandPage() {
                 <h1 className="z-title text-4xl md:text-5xl mb-8" style={{ fontWeight: 600 }}>{brand.name}</h1>
 
                 {series.length > 0 && (
-                    <section className="z-shell p-6 md:p-8 mb-8">
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-8">
-                            {series.map((group) => (
-                                <div key={group.title}>
-                                    <h3 className="text-[#1f1b16] text-sm font-semibold mb-3 tracking-[0.02em]">
-                                        {group.title}
-                                    </h3>
-                                    <ul className="space-y-1.5">
-                                        {group.models.map((model) => (
-                                            <li key={model}>
-                                                <Link
-                                                    to={`/model/${brand.slug}/${modelSlug(model)}`}
-                                                    className="text-sm text-[#6f6354] hover:text-[#8b6a47] hover:underline underline-offset-2 transition-colors"
-                                                >
-                                                    {model}
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            ))}
-                        </div>
+                    <section className="z-shell p-6 md:p-8 mb-8 space-y-8">
+                        {series.map((group) => (
+                            <div key={group.title}>
+                                <h3 className="text-[#1f1b16] text-sm font-semibold mb-3 tracking-[0.02em]">
+                                    {group.title}
+                                </h3>
+                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-6 gap-y-1.5">
+                                    {group.models.map((model) => (
+                                        <li key={model}>
+                                            <Link
+                                                to={`/model/${brand.slug}/${modelSlug(model)}`}
+                                                className="text-sm text-[#6f6354] hover:text-[#8b6a47] hover:underline underline-offset-2 transition-colors"
+                                            >
+                                                {model}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
                     </section>
                 )}
 

@@ -65,32 +65,28 @@ export default function BrandPage() {
                 {brandProducts.length > 0 && (
                     <>
                         <h2 className="z-title text-2xl mb-4" style={{ fontWeight: 600 }}>В наличии</h2>
-                        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">
-                            <ProductFilters
-                                filters={filters}
-                                options={options}
-                                bounds={bounds}
-                                toggleListValue={toggleListValue}
-                                setNfc={setNfc}
-                                setPrice={setPrice}
-                                clearFilters={clearFilters}
-                            />
-                            <div>
-                                {loading ? (
-                                    <div className="z-shell px-4 py-16 text-center text-[#7b6f5f]">Загружаю...</div>
-                                ) : filteredProducts.length === 0 ? (
-                                    <div className="z-shell px-4 py-16 text-center text-[#6d6152]">
-                                        По фильтрам ничего не найдено.
-                                    </div>
-                                ) : (
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
-                                        {filteredProducts.map((p) => (
-                                            <ProductCard key={p.id} product={p} />
-                                        ))}
-                                    </div>
-                                )}
+                        <ProductFilters
+                            filters={filters}
+                            options={options}
+                            bounds={bounds}
+                            toggleListValue={toggleListValue}
+                            setNfc={setNfc}
+                            setPrice={setPrice}
+                            clearFilters={clearFilters}
+                        />
+                        {loading ? (
+                            <div className="z-shell px-4 py-16 text-center text-[#7b6f5f]">Загружаю...</div>
+                        ) : filteredProducts.length === 0 ? (
+                            <div className="z-shell px-4 py-16 text-center text-[#6d6152]">
+                                По фильтрам ничего не найдено.
                             </div>
-                        </div>
+                        ) : (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-5">
+                                {filteredProducts.map((p) => (
+                                    <ProductCard key={p.id} product={p} />
+                                ))}
+                            </div>
+                        )}
                     </>
                 )}
             </div>

@@ -1,0 +1,211 @@
+/* ============================================================
+   ZABERG Design System — Colors & Typography
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+
+/* ── Root Tokens ─────────────────────────────────────────── */
+:root {
+
+  /* --- Base Colors --- */
+  --color-black:       #000000;
+  --color-white:       #ffffff;
+
+  /* --- Backgrounds --- */
+  --bg-base:           #0a0a0a;
+  --bg-surface:        #141414;
+  --bg-elevated:       #1e1e1e;
+  --bg-overlay:        rgba(10, 10, 10, 0.85);
+
+  /* --- Foregrounds --- */
+  --fg-1:              #ffffff;
+  --fg-2:              #a0a0a0;
+  --fg-3:              #505050;
+  --fg-inverse:        #0a0a0a;
+
+  /* --- Accent: Magenta (primary) --- */
+  --accent-magenta:        #d93caf;
+  --accent-magenta-light:  #f060cc;
+  --accent-magenta-dim:    rgba(217, 60, 175, 0.15);
+  --accent-magenta-border: rgba(217, 60, 175, 0.35);
+
+  /* --- Accent: Blue (info/links) --- */
+  --accent-blue:        #3a6fd8;
+  --accent-blue-light:  #5a8ff8;
+  --accent-blue-dim:    rgba(58, 111, 216, 0.15);
+  --accent-blue-border: rgba(58, 111, 216, 0.35);
+
+  /* --- Accent: Green (success/stock) --- */
+  --accent-green:        #2db55d;
+  --accent-green-light:  #3fd572;
+  --accent-green-dim:    rgba(45, 181, 93, 0.15);
+  --accent-green-border: rgba(45, 181, 93, 0.35);
+
+  /* --- Semantic Colors --- */
+  --color-success:   var(--accent-green);
+  --color-warning:   #e8a020;
+  --color-danger:    #e03c3c;
+  --color-info:      var(--accent-blue);
+  --color-primary:   var(--accent-magenta);
+
+  /* --- Borders --- */
+  --border:           #2a2a2a;
+  --border-subtle:    #1e1e1e;
+  --border-strong:    #3a3a3a;
+  --border-focus:     var(--accent-magenta);
+
+  /* --- Shadows / Elevation --- */
+  --shadow-sm:    0 1px 4px rgba(0, 0, 0, 0.35);
+  --shadow-md:    0 2px 12px rgba(0, 0, 0, 0.45);
+  --shadow-lg:    0 8px 32px rgba(0, 0, 0, 0.65);
+  --shadow-glow-magenta: 0 0 20px rgba(217, 60, 175, 0.25);
+  --shadow-glow-blue:    0 0 20px rgba(58, 111, 216, 0.25);
+
+  /* ── Spacing ─────────────────────────────────────────── */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   24px;
+  --space-6:   32px;
+  --space-7:   48px;
+  --space-8:   64px;
+  --space-9:   96px;
+  --space-10:  128px;
+
+  /* ── Corner Radii ────────────────────────────────────── */
+  --radius-xs:  2px;
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --radius-lg:  12px;
+  --radius-xl:  20px;
+  --radius-full: 9999px;
+
+  /* ── Typography: Font Families ──────────────────────── */
+  --font-display: 'Unbounded', sans-serif;
+  --font-body:    'Inter', sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+  /* ── Typography: Scale ──────────────────────────────── */
+  --text-hero:    clamp(40px, 5vw, 72px);
+  --text-h1:      clamp(32px, 3.5vw, 48px);
+  --text-h2:      clamp(24px, 2.5vw, 32px);
+  --text-h3:      clamp(18px, 2vw, 22px);
+  --text-h4:      18px;
+  --text-body:    15px;
+  --text-small:   13px;
+  --text-micro:   11px;
+
+  /* ── Typography: Weights ────────────────────────────── */
+  --weight-regular:    400;
+  --weight-medium:     500;
+  --weight-semibold:   600;
+  --weight-bold:       700;
+  --weight-extrabold:  800;
+  --weight-black:      900;
+
+  /* ── Typography: Line Heights ───────────────────────── */
+  --leading-tight:   1.15;
+  --leading-snug:    1.35;
+  --leading-normal:  1.55;
+  --leading-relaxed: 1.7;
+
+  /* ── Typography: Letter Spacing ─────────────────────── */
+  --tracking-tight:  -0.03em;
+  --tracking-normal: -0.01em;
+  --tracking-wide:   0.05em;
+  --tracking-wider:  0.12em;
+
+  /* ── Animation ──────────────────────────────────────── */
+  --duration-fast:   120ms;
+  --duration-base:   200ms;
+  --duration-slow:   350ms;
+  --ease-out:        cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:     cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+/* ── Semantic Element Styles ─────────────────────────────── */
+
+body {
+  background-color: var(--bg-base);
+  color: var(--fg-1);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, .h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  font-weight: var(--weight-extrabold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg-1);
+}
+
+h2, .h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg-1);
+}
+
+h3, .h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  color: var(--fg-1);
+}
+
+h4, .h4 {
+  font-family: var(--font-body);
+  font-size: var(--text-h4);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  color: var(--fg-1);
+}
+
+p, .body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+  color: var(--fg-2);
+}
+
+.small {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  color: var(--fg-2);
+}
+
+.micro {
+  font-family: var(--font-body);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+code, .mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  color: var(--fg-1);
+}
+
+/* ── Utility: Text Colors ────────────────────────────────── */
+.text-primary   { color: var(--accent-magenta); }
+.text-blue      { color: var(--accent-blue); }
+.text-green     { color: var(--accent-green); }
+.text-muted     { color: var(--fg-2); }
+.text-faint     { color: var(--fg-3); }
+
+/* ── Utility: Backgrounds ────────────────────────────────── */
+.bg-base        { background: var(--bg-base); }
+.bg-surface     { background: var(--bg-surface); }
+.bg-elevated    { background: var(--bg-elevated); }

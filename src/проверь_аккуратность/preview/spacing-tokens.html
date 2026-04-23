@@ -1,0 +1,45 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;padding:20px;font-family:'Inter',sans-serif}
+.section{margin-bottom:20px}
+.title{font-size:10px;font-weight:500;color:#505050;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.row{display:flex;gap:6px;align-items:flex-end;margin-bottom:8px}
+.block{background:#1e1e1e;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:6px}
+.val{font-size:10px;color:#505050;margin-top:4px;font-family:monospace}
+
+.radius-row{display:flex;gap:10px}
+.rbox{width:60px;height:60px;background:#1e1e1e;border:1px solid #3a3a3a;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px}
+.rlabel{font-size:10px;color:#505050;font-family:monospace}
+</style></head><body>
+
+<div class="section">
+<div class="title">Spacing Scale (px)</div>
+<div class="row">
+  <div style="display:flex;gap:4px;align-items:flex-end">
+    <div style="text-align:center"><div class="block" style="width:16px;height:4px"></div><div class="val">4</div></div>
+    <div style="text-align:center"><div class="block" style="width:16px;height:8px"></div><div class="val">8</div></div>
+    <div style="text-align:center"><div class="block" style="width:20px;height:12px"></div><div class="val">12</div></div>
+    <div style="text-align:center"><div class="block" style="width:24px;height:16px"></div><div class="val">16</div></div>
+    <div style="text-align:center"><div class="block" style="width:28px;height:24px"></div><div class="val">24</div></div>
+    <div style="text-align:center"><div class="block" style="width:32px;height:32px"></div><div class="val">32</div></div>
+    <div style="text-align:center"><div class="block" style="width:36px;height:48px"></div><div class="val">48</div></div>
+    <div style="text-align:center"><div class="block" style="width:40px;height:64px"></div><div class="val">64</div></div>
+  </div>
+</div>
+</div>
+
+<div class="section">
+<div class="title">Corner Radius</div>
+<div class="radius-row">
+  <div style="text-align:center"><div class="rbox" style="border-radius:2px"><span class="rlabel">2px</span></div><div class="val">--xs</div></div>
+  <div style="text-align:center"><div class="rbox" style="border-radius:4px"><span class="rlabel">4px</span></div><div class="val">--sm</div></div>
+  <div style="text-align:center"><div class="rbox" style="border-radius:8px"><span class="rlabel">8px</span></div><div class="val">--md</div></div>
+  <div style="text-align:center"><div class="rbox" style="border-radius:12px"><span class="rlabel">12px</span></div><div class="val">--lg</div></div>
+  <div style="text-align:center"><div class="rbox" style="border-radius:20px"><span class="rlabel">20px</span></div><div class="val">--xl</div></div>
+  <div style="text-align:center"><div class="rbox" style="border-radius:9999px"><span class="rlabel">∞</span></div><div class="val">--full</div></div>
+</div>
+</div>
+
+</body></html>

@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { CATALOG_CATEGORIES } from '../lib/catalog';
-import { BRANDS_BY_CATEGORY, brandSlug as toBrandSlug } from '../data/brandModels';
+import { products } from '../data/products';
 
 function buildTopLinks() {
     return [
@@ -44,10 +44,24 @@ const categoryIcons = {
     accessories: Component,
 };
 
-const categoryBrands: Record<string, string[]> = CATALOG_CATEGORIES.reduce((acc, category) => {
-    acc[category.id] = BRANDS_BY_CATEGORY[category.id] ?? [];
+const categoryBrands = CATALOG_CATEGORIES.reduce<Record<string, string[]>>((acc, category) => {
+    const brands = Array.from(
+        new Set(
+            products
+                .filter((product) => product.category === category.id)
+                .map((product) => product.brand)
+        )
+    ).sort((a, b) => a.localeCompare(b, 'ru-RU'));
+
+    acc[category.id] = brands;
     return acc;
-}, {} as Record<string, string[]>);
+}, {});
+
+const HEADER_SLIDES = [
+    new URL('../../design_new/ChatGPT Image 21 abr 2026, 18_16_04.png', import.meta.url).href,
+    new URL('../../design_new/ChatGPT Image 21 abr 2026, 18_17_43.png', import.meta.url).href,
+    new URL('../../design_new/ChatGPT Image 21 abr 2026, 18_19_31.png', import.meta.url).href,
+];
 
 function getActiveCategoryId(pathname: string) {
     return CATALOG_CATEGORIES.find(
@@ -63,6 +77,7 @@ export default function Layout() {
         if (typeof window === 'undefined') return false;
         return localStorage.getItem('z_sidebar_collapsed') === '1';
     });
+    const [headerSlideIndex, setHeaderSlideIndex] = useState(0);
     const [expandedCategories, setExpandedCategories] = useState<string[]>(() => {
         const activeCategoryId = getActiveCategoryId(location.pathname);
         return activeCategoryId ? [activeCategoryId] : [];
@@ -77,6 +92,13 @@ export default function Layout() {
     useEffect(() => {
         localStorage.setItem('z_sidebar_collapsed', isSidebarCollapsed ? '1' : '0');
     }, [isSidebarCollapsed]);
+
+    useEffect(() => {
+        const timer = window.setInterval(() => {
+            setHeaderSlideIndex((prev) => (prev + 1) % HEADER_SLIDES.length);
+        }, 4800);
+        return () => window.clearInterval(timer);
+    }, []);
 
     useEffect(() => {
         const activeCategoryId = getActiveCategoryId(location.pathname);
@@ -124,7 +146,17 @@ export default function Layout() {
                     <Menu size={22} />
                 </button>
                 <Link to="/" className="flex items-center flex-1 justify-center">
-                    <span className="z-wordmark text-[22px] leading-none">ZABERG</span>
+                    <div className="relative h-12 w-48 overflow-hidden">
+                        {HEADER_SLIDES.map((slide, index) => (
+                            <img
+                                key={`header-mobile-${slide}`}
+                                src={slide}
+                                alt={`ZABERG ${index + 1}`}
+                                className="absolute inset-0 h-full w-full object-contain origin-left scale-[1.22] transition-opacity duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                                style={{ opacity: headerSlideIndex === index ? 1 : 0 }}
+                            />
+                        ))}
+                    </div>
                 </Link>
 
                 <div className="flex items-center gap-4">
@@ -143,7 +175,17 @@ export default function Layout() {
             <header className="hidden md:flex fixed top-0 w-full z-50 h-20 items-center justify-between px-6 bg-[#fffdf9]/95 border-b border-[#ddd3c4] backdrop-blur">
                 <div className="flex items-center gap-8">
                     <Link to="/" className="flex items-center">
-                        <span className="z-wordmark text-[30px] leading-none">ZABERG</span>
+                        <div className="relative h-[72px] w-[360px] overflow-hidden">
+                            {HEADER_SLIDES.map((slide, index) => (
+                                <img
+                                    key={`header-desktop-${slide}`}
+                                    src={slide}
+                                    alt={`ZABERG ${index + 1}`}
+                                    className="absolute inset-0 h-full w-full object-contain origin-left scale-[1.22] transition-opacity duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                                    style={{ opacity: headerSlideIndex === index ? 1 : 0 }}
+                                />
+                            ))}
+                        </div>
                     </Link>
 
                     <nav className="flex gap-6">
@@ -240,7 +282,7 @@ export default function Layout() {
                                                             return (
                                                                 <Link
                                                                     key={`${cat.id}-${brand}`}
-                                                                    to={toBrandSlug(brand) ? `/brand/${toBrandSlug(brand)}` : `${cat.path}?brand=${encodeURIComponent(brand)}`}
+                                                                    to={`${cat.path}?brand=${encodeURIComponent(brand)}`}
                                                                     className={`text-[11px] uppercase tracking-[0.09em] px-2 py-1 rounded-[3px] transition-colors ${isBrandActive
                                                                         ? 'bg-[#ece0c6] text-[#3f351f]'
                                                                         : 'text-[#7b6f5f] hover:bg-[#f4eee5] hover:text-[#1f1b16]'
@@ -262,21 +304,12 @@ export default function Layout() {
 
                 </aside>
 
-                {/* Sidebar collapse tab: fixed left uses same spacing scale as w-64 / pl-64; vertical center in area below header */}
+                {/* Sidebar collapse tab (desktop only) */}
                 <button
                     type="button"
                     onClick={() => setIsSidebarCollapsed((prev) => !prev)}
-                    className={[
-                        'hidden md:flex fixed z-50 items-center justify-center h-14 w-6',
-                        'top-[calc(5rem+(100vh-5rem)/2)] -translate-y-1/2',
-                        'border border-[#ddd3c4] bg-[#fffdf9] text-[#6f6354]',
-                        'shadow-[2px_2px_10px_rgba(60,40,15,0.07)]',
-                        'transition-[left,transform,background-color,color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
-                        'hover:bg-[#f4eee5] hover:text-[#1f1b16]',
-                        isSidebarCollapsed
-                            ? 'left-0 translate-x-0 rounded-l-none rounded-r-[6px] border-l-0'
-                            : 'left-64 -translate-x-1/2 rounded-l-none rounded-r-[6px] border-l-0',
-                    ].join(' ')}
+                    className={`hidden md:flex fixed top-[152px] z-50 items-center justify-center h-14 w-6 rounded-r-[6px] border border-l-0 border-[#d9cdbb] bg-[#f2eadf] text-[#5f5346] shadow-[2px_2px_8px_rgba(60,40,15,0.10)] transition-[left,background-color,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[#ece2d5] hover:text-[#1f1b16]`}
+                    style={{ left: isSidebarCollapsed ? 0 : 256 }}
                     title={isSidebarCollapsed ? 'Развернуть левое меню' : 'Свернуть левое меню'}
                     aria-label={isSidebarCollapsed ? 'Развернуть левое меню' : 'Свернуть левое меню'}
                 >

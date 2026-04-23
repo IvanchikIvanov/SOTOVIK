@@ -1,0 +1,24 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;padding:20px;font-family:'Inter',sans-serif}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.swatch{border-radius:8px;overflow:hidden}
+.color{height:72px;width:100%}
+.label{padding:8px 10px;background:#141414;border:1px solid #2a2a2a;border-top:none;border-radius:0 0 8px 8px}
+.name{font-size:11px;font-weight:500;color:#a0a0a0;letter-spacing:.04em;text-transform:uppercase}
+.val{font-size:12px;color:#505050;margin-top:2px;font-family:monospace}
+</style></head><body>
+<div class="grid">
+  <div class="swatch"><div class="color" style="background:#0a0a0a;border:1px solid #2a2a2a;border-bottom:none;border-radius:8px 8px 0 0"></div><div class="label"><div class="name">BG Base</div><div class="val">#0a0a0a</div></div></div>
+  <div class="swatch"><div class="color" style="background:#141414;border-radius:8px 8px 0 0"></div><div class="label"><div class="name">BG Surface</div><div class="val">#141414</div></div></div>
+  <div class="swatch"><div class="color" style="background:#1e1e1e;border-radius:8px 8px 0 0"></div><div class="label"><div class="name">BG Elevated</div><div class="val">#1e1e1e</div></div></div>
+  <div class="swatch"><div class="color" style="background:#2a2a2a;border-radius:8px 8px 0 0"></div><div class="label"><div class="name">Border</div><div class="val">#2a2a2a</div></div></div>
+  <div class="swatch"><div class="color" style="background:#3a3a3a;border-radius:8px 8px 0 0"></div><div class="label"><div class="name">Border Strong</div><div class="val">#3a3a3a</div></div></div>
+  <div class="swatch"><div class="color" style="background:#ffffff;border-radius:8px 8px 0 0"></div><div class="label"><div class="name">FG 1</div><div class="val">#ffffff</div></div></div>
+  <div class="swatch"><div class="color" style="background:#a0a0a0;border-radius:8px 8px 0 0"></div><div class="label"><div class="name">FG 2</div><div class="val">#a0a0a0</div></div></div>
+  <div class="swatch"><div class="color" style="background:#505050;border-radius:8px 8px 0 0"></div><div class="label"><div class="name">FG 3</div><div class="val">#505050</div></div></div>
+  <div class="swatch"><div class="color" style="background:#222;border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:center;font-size:13px;color:#505050;font-family:monospace">rgba<br>overlay</div><div class="label"><div class="name">BG Overlay</div><div class="val">rgba(10,10,10,.85)</div></div></div>
+</div>
+</body></html>

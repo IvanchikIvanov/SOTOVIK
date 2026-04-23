@@ -1,0 +1,23 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;padding:20px;font-family:'Inter',sans-serif}
+.list{display:flex;flex-direction:column;gap:4px}
+.row{display:flex;align-items:center;gap:12px;padding:8px 12px;background:#141414;border:1px solid #2a2a2a;border-radius:8px}
+.dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.token{font-size:12px;font-family:monospace;color:#a0a0a0;min-width:160px}
+.desc{font-size:12px;color:#505050}
+.bar{height:10px;border-radius:4px;flex:1}
+</style></head><body>
+<div class="list">
+  <div class="row"><div class="dot" style="background:#d93caf"></div><span class="token">--color-primary</span><div class="bar" style="background:#d93caf;opacity:.8"></div><span class="desc">Primary CTA, logo accent</span></div>
+  <div class="row"><div class="dot" style="background:#2db55d"></div><span class="token">--color-success</span><div class="bar" style="background:#2db55d;opacity:.8"></div><span class="desc">В наличии, подтверждение</span></div>
+  <div class="row"><div class="dot" style="background:#e8a020"></div><span class="token">--color-warning</span><div class="bar" style="background:#e8a020;opacity:.8"></div><span class="desc">Мало на складе, внимание</span></div>
+  <div class="row"><div class="dot" style="background:#e03c3c"></div><span class="token">--color-danger</span><div class="bar" style="background:#e03c3c;opacity:.8"></div><span class="desc">Нет в наличии, ошибка</span></div>
+  <div class="row"><div class="dot" style="background:#3a6fd8"></div><span class="token">--color-info</span><div class="bar" style="background:#3a6fd8;opacity:.8"></div><span class="desc">Ссылки, фильтры, инфо</span></div>
+  <div class="row"><div class="dot" style="background:#ffffff"></div><span class="token">--fg-1</span><div class="bar" style="background:#fff;opacity:.9"></div><span class="desc">Primary text</span></div>
+  <div class="row"><div class="dot" style="background:#a0a0a0"></div><span class="token">--fg-2</span><div class="bar" style="background:#a0a0a0;opacity:.9"></div><span class="desc">Secondary / meta text</span></div>
+  <div class="row"><div class="dot" style="background:#505050"></div><span class="token">--fg-3</span><div class="bar" style="background:#505050;opacity:.9"></div><span class="desc">Disabled / placeholder</span></div>
+</div>
+</body></html>

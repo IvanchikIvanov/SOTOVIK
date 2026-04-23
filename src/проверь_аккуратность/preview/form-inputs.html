@@ -1,0 +1,54 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;padding:20px;font-family:'Inter',sans-serif}
+.row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;align-items:flex-start}
+.label{font-size:10px;font-weight:500;color:#505050;letter-spacing:.1em;text-transform:uppercase;width:100%;margin-bottom:6px}
+.input-wrap{display:flex;flex-direction:column;gap:4px;min-width:200px}
+.field-label{font-size:12px;color:#a0a0a0}
+input,select{background:#141414;border:1px solid #2a2a2a;border-radius:8px;padding:10px 12px;font-size:14px;color:#fff;font-family:'Inter',sans-serif;outline:none;width:100%}
+input:focus,select:focus{border-color:#d93caf;box-shadow:0 0 0 3px rgba(217,60,175,.12)}
+input::placeholder{color:#505050}
+.search-wrap{position:relative;min-width:240px}
+.search-wrap input{padding-left:36px}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#505050;font-size:14px}
+.range-row{display:flex;gap:8px;align-items:center}
+.range-row input[type=number]{width:90px}
+.sep{color:#505050;font-size:12px}
+</style></head><body>
+
+<div class="row"><div class="label">Search & Text Inputs</div>
+  <div class="input-wrap search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="text" placeholder="Поиск по каталогу…">
+  </div>
+  <div class="input-wrap">
+    <div class="field-label">Модель</div>
+    <input type="text" placeholder="Введите название">
+  </div>
+</div>
+
+<div class="row"><div class="label">Select & Range</div>
+  <div class="input-wrap">
+    <div class="field-label">Бренд</div>
+    <select><option>Все бренды</option><option>Apple</option><option>Samsung</option><option>Xiaomi</option></select>
+  </div>
+  <div class="input-wrap">
+    <div class="field-label">Цена (₽)</div>
+    <div class="range-row">
+      <input type="number" placeholder="от 10 000">
+      <span class="sep">—</span>
+      <input type="number" placeholder="до 200 000">
+    </div>
+  </div>
+</div>
+
+<div class="row"><div class="label">Focus State</div>
+  <div class="input-wrap">
+    <div class="field-label">Память</div>
+    <input type="text" value="256 GB" style="border-color:#d93caf;box-shadow:0 0 0 3px rgba(217,60,175,.12)">
+  </div>
+</div>
+
+</body></html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZABERG — Каталог премиум техники</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body { background: #f6f2eb; color: #1f1b16; font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+  input, button, select, textarea { font-family: 'DM Sans', sans-serif; }
+  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+  ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: #f6f2eb; } ::-webkit-scrollbar-thumb { background: #cfc5b5; border-radius: 3px; }
+  input[type=range] { accent-color: #8b6a47; }
+  input[type=checkbox] { accent-color: #8b6a47; }
+  input[type=radio] { accent-color: #8b6a47; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="Header.jsx"></script>
+<script type="text/babel" src="Sidebar.jsx"></script>
+<script type="text/babel" src="ProductCard.jsx"></script>
+<script type="text/babel" src="FilterPanel.jsx"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const PRODUCTS = [
+  { id:1,  brand:'Apple',   name:'iPhone 16 Pro Max 256GB', categoryLabel:'Смартфоны', screen:'6.9"', ram:'8 GB', storage:'256 GB', price:129990, in_stock:true,  icon:'📱', category:'smartphones' },
+  { id:2,  brand:'Apple',   name:'iPhone 16 256GB',          categoryLabel:'Смартфоны', screen:'6.1"', ram:'8 GB', storage:'256 GB', price:99990,  oldPrice:109990, in_stock:true, icon:'📱', category:'smartphones' },
+  { id:3,  brand:'Samsung', name:'Galaxy S25 Ultra 512GB',   categoryLabel:'Смартфоны', screen:'6.8"', ram:'12 GB',storage:'512 GB', price:109990, in_stock:true,  icon:'📱', category:'smartphones' },
+  { id:4,  brand:'Xiaomi',  name:'14 Ultra 512GB',            categoryLabel:'Смартфоны', screen:'6.73"',ram:'16 GB',storage:'512 GB', price:89990,  in_stock:true,  icon:'📱', category:'smartphones' },
+  { id:5,  brand:'Honor',   name:'Magic7 Pro 512GB',          categoryLabel:'Смартфоны', screen:'6.8"', ram:'12 GB',storage:'512 GB', price:69990,  in_stock:true,  icon:'📱', category:'smartphones' },
+  { id:6,  brand:'Google',  name:'Pixel 9 Pro 256GB',         categoryLabel:'Смартфоны', screen:'6.3"', ram:'16 GB',storage:'256 GB', price:89990,  in_stock:true,  icon:'📱', category:'smartphones' },
+  { id:7,  brand:'Realme',  name:'GT7 Pro 256GB',             categoryLabel:'Смартфоны', screen:'6.78"',ram:'12 GB',storage:'256 GB', price:49990,  oldPrice:59990, in_stock:true, icon:'📱', category:'smartphones' },
+  { id:8,  brand:'Samsung', name:'Galaxy Tab S10+ 256GB',     categoryLabel:'Планшеты',  screen:'12.4"',ram:'12 GB',storage:'256 GB', price:79990,  in_stock:true,  icon:'📟', category:'tablets' },
+  { id:9,  brand:'Apple',   name:'MacBook Pro 14" M4',        categoryLabel:'Компьютеры',screen:'14"',  ram:'16 GB',storage:'512 GB', price:189990, in_stock:true,  icon:'💻', category:'computers' },
+  { id:10, brand:'Apple',   name:'AirPods Pro 2',             categoryLabel:'Наушники',  screen:null,   ram:null,   storage:null,    price:24990,  in_stock:true,  icon:'🎧', category:'audio' },
+  { id:11, brand:'Dyson',   name:'Zone Headphones',           categoryLabel:'Наушники',  screen:null,   ram:null,   storage:null,    price:59990,  in_stock:false, icon:'🎧', category:'audio' },
+  { id:12, brand:'Apple',   name:'Apple Watch Ultra 2',       categoryLabel:'Умные часы',screen:'49mm', ram:null,   storage:null,    price:79990,  in_stock:true,  icon:'⌚', category:'watches' },
+];
+
+// ── Cart Drawer ──────────────────────────────────────────────
+function CartDrawer({ items, onClose, onRemove }) {
+  const total = items.reduce((s,i) => s + i.price * i.qty, 0);
+  return (
+    <div style={S.drawerOverlay} onClick={onClose}>
+      <div style={S.drawer} onClick={e=>e.stopPropagation()}>
+        <div style={S.drawerHead}>
+          <span style={S.drawerTitle}>Корзина</span>
+          <button style={S.drawerClose} onClick={onClose}>✕</button>
+        </div>
+        {items.length === 0
+          ? <div style={S.drawerEmpty}>Корзина пуста</div>
+          : <>
+            <div style={S.drawerItems}>
+              {items.map(item => (
+                <div key={item.id} style={S.cartItem}>
+                  <div style={S.cartThumb}>{item.icon}</div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontSize:13,fontWeight:600,color:'#1f1b16',lineHeight:1.3,fontFamily:"'Cormorant Garamond',serif"}}>{item.name}</div>
+                    <div style={{fontSize:12,color:'#8d806f',marginTop:2}}>{item.qty} × {item.price.toLocaleString('ru-RU')} ₽</div>
+                  </div>
+                  <button style={S.cartRemove} onClick={()=>onRemove(item.id)}>✕</button>
+                </div>
+              ))}
+            </div>
+            <div style={S.drawerFooter}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}}>
+                <span style={{fontSize:13,color:'#786b5a'}}>Итого</span>
+                <span style={{fontFamily:"'Cormorant Garamond',serif",fontSize:22,fontWeight:600,color:'#1f1b16'}}>{total.toLocaleString('ru-RU')} ₽</span>
+              </div>
+              <button style={S.checkoutBtn}>Оформить заказ</button>
+            </div>
+          </>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ── Product Detail ───────────────────────────────────────────
+function ProductDetail({ product, onBack, onAdd }) {
+  const [added, setAdded] = React.useState(false);
+  function handleAdd() { setAdded(true); onAdd(product); setTimeout(()=>setAdded(false),1400); }
+  return (
+    <div style={S.pdpWrap}>
+      <div style={S.breadcrumb}>Главная › Смартфоны › {product.name}</div>
+      <button style={S.backBtn} onClick={onBack}>← Назад к каталогу</button>
+      <div style={S.pdpGrid}>
+        <div style={S.pdpImgBox}>
+          <div style={{fontSize:110}}>{product.icon}</div>
+          <div style={S.pdpTagCat}>{product.categoryLabel}</div>
+          <div style={S.pdpTagBrand}>{product.brand}</div>
+        </div>
+        <div>
+          <h1 style={S.pdpTitle}>{product.name}</h1>
+          <div style={S.pdpAvail}>{product.in_stock ? 'В наличии' : 'Нет в наличии'}</div>
+
+          {/* Specs */}
+          <div style={S.specsBox}>
+            {[['Бренд',product.brand],['Экран',product.screen],['RAM',product.ram],['Память',product.storage]].filter(([,v])=>v).map(([k,v])=>(
+              <div key={k} style={S.specRow}>
+                <span style={S.specKey}>{k}</span>
+                <span style={S.specVal}>{v}</span>
+              </div>
+            ))}
+          </div>
+
+          <div style={{display:'flex',alignItems:'baseline',gap:10,margin:'20px 0'}}>
+            <div style={S.pdpPrice}>{product.price.toLocaleString('ru-RU')} ₽</div>
+            {product.oldPrice && <span style={{fontSize:16,color:'#8d806f',textDecoration:'line-through'}}>{product.oldPrice.toLocaleString('ru-RU')} ₽</span>}
+          </div>
+
+          <div style={{display:'flex',gap:10}}>
+            <button style={{...S.pdpBtnBuy,...(added?{background:'#4a7a3a'}:{}),...(!product.in_stock?{background:'#c8beaf',cursor:'not-allowed'}:{})}} onClick={handleAdd} disabled={!product.in_stock}>
+              {added ? '✓ Добавлено в корзину' : 'Добавить в корзину'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Home Page ────────────────────────────────────────────────
+function HomePage({ onNav, onAdd, onDetail }) {
+  return (
+    <div style={S.homeWrap}>
+      {/* Hero */}
+      <div style={S.hero}>
+        <div style={S.heroInner}>
+          <div style={S.heroEyebrow}>Премиум электроника</div>
+          <h1 style={S.heroTitle}>Каталог премиум<br/>техники</h1>
+          <p style={S.heroSub}>Выберите устройство по точным параметрам:<br/>размер, память, RAM, NFC, наличие и цене</p>
+          <button style={S.heroCta} onClick={()=>onNav('catalog','smartphones')}>Смотреть каталог</button>
+        </div>
+      </div>
+
+      {/* Popular products */}
+      <div style={S.section}>
+        <div style={S.sectionHead}>
+          <h2 style={S.sectionTitle}>Популярные товары</h2>
+          <span style={S.sectionLink} onClick={()=>onNav('catalog','smartphones')}>Все товары →</span>
+        </div>
+        <div style={S.productGrid}>
+          {PRODUCTS.slice(0,4).map(p=><ZProductCard key={p.id} product={p} onAdd={onAdd} onDetail={onDetail}/>)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Catalog Page ─────────────────────────────────────────────
+function CatalogPage({ category, brand, onAdd, onDetail }) {
+  const [sort, setSort] = React.useState('popular');
+  const catLabel = {smartphones:'Смартфоны',tablets:'Планшеты',computers:'Компьютеры',watches:'Умные часы',audio:'Наушники',gaming:'Игровые приставки',home:'Техника для дома',accessories:'Аксессуары'}[category] || 'Каталог';
+
+  let items = PRODUCTS.filter(p => p.category === (category||'smartphones'));
+  if (brand) items = items.filter(p=>p.brand===brand);
+  items = [...items].sort((a,b)=> sort==='price-asc'?a.price-b.price:sort==='price-desc'?b.price-a.price:0);
+
+  return (
+    <div style={S.catalogContent}>
+      {/* Breadcrumb */}
+      <div style={S.breadcrumb}>Главная › {catLabel}{brand ? ` › ${brand}` : ''}</div>
+      <h1 style={S.catalogTitle}>{brand||catLabel}</h1>
+
+      {/* Filters */}
+      <ZFilterPanel/>
+
+      {/* Sort bar */}
+      <div style={S.sortBar}>
+        <span style={{fontSize:13,color:'#857968'}}>{items.length} товаров</span>
+        <div style={{display:'flex',gap:6}}>
+          {[['popular','Популярное'],['price-asc','Дешевле'],['price-desc','Дороже']].map(([v,l])=>(
+            <button key={v} style={{...S.sortBtn,...(sort===v?S.sortBtnActive:{})}} onClick={()=>setSort(v)}>{l}</button>
+          ))}
+        </div>
+      </div>
+
+      {/* Grid */}
+      {items.length > 0
+        ? <div style={S.productGrid}>{items.map(p=><ZProductCard key={p.id} product={p} onAdd={onAdd} onDetail={onDetail}/>)}</div>
+        : <div style={S.emptyState}>Товаров не найдено</div>
+      }
+    </div>
+  );
+}
+
+// ── App ──────────────────────────────────────────────────────
+function App() {
+  const saved = (() => { try { return JSON.parse(localStorage.getItem('zaberg_v3')||'{}'); } catch { return {}; } })();
+  const [page, setPage] = React.useState(saved.page||'home');
+  const [catId, setCatId] = React.useState(saved.catId||'smartphones');
+  const [brandFilter, setBrandFilter] = React.useState(saved.brandFilter||null);
+  const [cart, setCart] = React.useState(saved.cart||[]);
+  const [cartOpen, setCartOpen] = React.useState(false);
+  const [detail, setDetail] = React.useState(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
+
+  React.useEffect(()=>{
+    localStorage.setItem('zaberg_v3', JSON.stringify({page,catId,brandFilter,cart}));
+  },[page,catId,brandFilter,cart]);
+
+  function navigate(pg, cat, brand) {
+    setPage(pg); setDetail(null);
+    if (cat) setCatId(cat);
+    setBrandFilter(brand||null);
+  }
+
+  function addToCart(p) {
+    setCart(prev=>{
+      const ex=prev.find(i=>i.id===p.id);
+      return ex ? prev.map(i=>i.id===p.id?{...i,qty:i.qty+1}:i) : [...prev,{...p,qty:1}];
+    });
+  }
+
+  const SIDEBAR_W = sidebarCollapsed ? 0 : 256;
+  const cartCount = cart.reduce((s,i)=>s+i.qty,0);
+
+  return (
+    <div style={{minHeight:'100vh',background:'#f6f2eb'}}>
+      <ZHeader cartCount={cartCount} onCartClick={()=>setCartOpen(true)} onNav={navigate} currentPage={page}/>
+
+      <div style={{display:'flex'}}>
+        <ZSidebar
+          collapsed={sidebarCollapsed}
+          onToggle={()=>setSidebarCollapsed(v=>!v)}
+          activeCategory={catId}
+          activeBrand={brandFilter}
+          onNav={navigate}
+        />
+
+        <main style={{
+          flex:1, paddingLeft: SIDEBAR_W,
+          transition:'padding-left 400ms cubic-bezier(0.22,1,0.36,1)',
+          minHeight:'calc(100vh - 80px)',
+        }}>
+          {/* Sub-header breadcrumb bar */}
+          <div style={S.subHeader}>
+            <span style={{fontSize:11,textTransform:'uppercase',letterSpacing:'.12em',color:'#857968'}}>
+              Главная › {page==='home' ? 'Главная' : catId}
+            </span>
+            <span style={{fontSize:11,color:'#7a6e5e'}}>Zaberg collection</span>
+          </div>
+
+          <div style={{padding:'24px 32px 48px'}}>
+            {detail
+              ? <ProductDetail product={detail} onBack={()=>setDetail(null)} onAdd={addToCart}/>
+              : page==='home'
+              ? <HomePage onNav={navigate} onAdd={addToCart} onDetail={setDetail}/>
+              : <CatalogPage category={catId} brand={brandFilter} onAdd={addToCart} onDetail={setDetail}/>
+            }
+          </div>
+        </main>
+      </div>
+
+      {cartOpen && <CartDrawer items={cart} onClose={()=>setCartOpen(false)} onRemove={id=>setCart(c=>c.filter(i=>i.id!==id))}/>}
+    </div>
+  );
+}
+
+// ── Styles ───────────────────────────────────────────────────
+const S = {
+  subHeader: { display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 32px', borderBottom:'1px solid #e3d8c9', background:'#faf7f2', position:'sticky', top:80, zIndex:20 },
+
+  homeWrap: {},
+  hero: { background:'#fffdf9', border:'1px solid #e7ded1', borderRadius:8, padding:'56px 56px', marginBottom:36, position:'relative', overflow:'hidden' },
+  heroInner: { position:'relative', zIndex:1, maxWidth:560 },
+  heroEyebrow: { fontSize:11, fontWeight:600, color:'#8b6a47', letterSpacing:'.15em', textTransform:'uppercase', marginBottom:10, fontFamily:"'DM Sans',sans-serif" },
+  heroTitle: { fontFamily:"'Cormorant Garamond',serif", fontSize:'clamp(28px,3.5vw,52px)', fontWeight:600, color:'#1f1b16', lineHeight:1.1, marginBottom:14 },
+  heroSub: { fontSize:14, color:'#786b5a', lineHeight:1.65, marginBottom:24 },
+  heroCta: { background:'#1f1b16', color:'#fffdf9', border:'none', borderRadius:4, padding:'12px 24px', fontSize:13, fontWeight:500, cursor:'pointer', letterSpacing:'.04em', fontFamily:"'DM Sans',sans-serif" },
+
+  section: { marginBottom:40 },
+  sectionHead: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16 },
+  sectionTitle: { fontFamily:"'Cormorant Garamond',serif", fontSize:24, fontWeight:600, color:'#1f1b16' },
+  sectionLink: { fontSize:12, color:'#8b6a47', cursor:'pointer', fontWeight:500 },
+
+  productGrid: { display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(220px,1fr))', gap:14 },
+
+  catalogContent: {},
+  breadcrumb: { fontSize:11, color:'#857968', letterSpacing:'.05em', marginBottom:10, fontFamily:"'DM Sans',sans-serif" },
+  catalogTitle: { fontFamily:"'Cormorant Garamond',serif", fontSize:30, fontWeight:600, color:'#1f1b16', marginBottom:20 },
+  sortBar: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 },
+  sortBtn: { padding:'5px 12px', borderRadius:4, fontSize:12, fontWeight:500, background:'transparent', border:'1px solid #d4c8b8', color:'#786b5a', cursor:'pointer', fontFamily:"'DM Sans',sans-serif" },
+  sortBtnActive: { background:'#1f1b16', color:'#fffdf9', borderColor:'#1f1b16' },
+  emptyState: { textAlign:'center', color:'#b0a595', padding:'80px 0', fontSize:15 },
+
+  drawerOverlay: { position:'fixed', inset:0, background:'rgba(31,27,22,.3)', zIndex:200, display:'flex', justifyContent:'flex-end', backdropFilter:'blur(2px)' },
+  drawer: { width:380, background:'#fffdf9', borderLeft:'1px solid #ddd3c4', height:'100vh', display:'flex', flexDirection:'column', boxShadow:'-4px 0 32px rgba(35,29,22,.12)' },
+  drawerHead: { display:'flex', justifyContent:'space-between', alignItems:'center', padding:'20px 20px 16px', borderBottom:'1px solid #ece3d4' },
+  drawerTitle: { fontFamily:"'Cormorant Garamond',serif", fontSize:22, fontWeight:600, color:'#1f1b16' },
+  drawerClose: { width:30, height:30, display:'flex', alignItems:'center', justifyContent:'center', background:'#f2eadf', borderRadius:4, cursor:'pointer', color:'#5f5346', fontSize:12, border:'none' },
+  drawerEmpty: { flex:1, display:'flex', alignItems:'center', justifyContent:'center', color:'#b0a595', fontSize:14 },
+  drawerItems: { flex:1, overflowY:'auto', padding:'12px 16px' },
+  drawerFooter: { padding:'16px 20px', borderTop:'1px solid #ece3d4' },
+  cartItem: { display:'flex', alignItems:'center', gap:12, padding:'12px 0', borderBottom:'1px solid #ece3d4' },
+  cartThumb: { fontSize:28, width:44, height:44, background:'linear-gradient(145deg,#f1ece3,#f8f5f0)', borderRadius:6, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 },
+  cartRemove: { color:'#b0a595', cursor:'pointer', fontSize:11, padding:4, background:'transparent', border:'none' },
+  checkoutBtn: { width:'100%', background:'#1f1b16', color:'#fffdf9', border:'none', borderRadius:4, padding:'13px', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:"'DM Sans',sans-serif", letterSpacing:'.03em' },
+
+  pdpWrap: { paddingBottom:48 },
+  backBtn: { background:'transparent', border:'1px solid #d4c8b8', borderRadius:4, padding:'7px 14px', fontSize:12, color:'#786b5a', cursor:'pointer', marginBottom:16, fontFamily:"'DM Sans',sans-serif" },
+  pdpGrid: { display:'grid', gridTemplateColumns:'1fr 1fr', gap:48, alignItems:'start' },
+  pdpImgBox: { background:'linear-gradient(145deg,#f1ece3,#f8f5f0)', border:'1px solid #e7ded1', borderRadius:8, minHeight:400, display:'flex', alignItems:'center', justifyContent:'center', position:'relative' },
+  pdpTagCat: { position:'absolute', top:12, left:12, fontSize:10, textTransform:'uppercase', letterSpacing:'.1em', padding:'3px 8px', borderRadius:3, background:'rgba(255,255,255,.9)', color:'#5d5247', fontFamily:"'DM Sans',sans-serif" },
+  pdpTagBrand: { position:'absolute', top:12, right:12, fontSize:10, textTransform:'uppercase', letterSpacing:'.1em', padding:'3px 8px', borderRadius:3, border:'1px solid #d4c8b8', background:'rgba(255,255,255,.9)', color:'#6a5f52', fontFamily:"'DM Sans',sans-serif" },
+  pdpTitle: { fontFamily:"'Cormorant Garamond',serif", fontSize:28, fontWeight:600, color:'#1f1b16', lineHeight:1.2, marginBottom:10 },
+  pdpAvail: { fontSize:11, textTransform:'uppercase', letterSpacing:'.1em', color:'#5a7a48', background:'#edf5e5', padding:'3px 9px', borderRadius:3, display:'inline-block', marginBottom:20, fontFamily:"'DM Sans',sans-serif" },
+  specsBox: { border:'1px solid #e7ded1', borderRadius:6, overflow:'hidden', background:'#fffdf9' },
+  specRow: { display:'flex', justifyContent:'space-between', padding:'9px 14px', borderBottom:'1px solid #f0e8dc', fontFamily:"'DM Sans',sans-serif" },
+  specKey: { fontSize:12, color:'#786b5a' },
+  specVal: { fontSize:13, fontWeight:500, color:'#1f1b16' },
+  pdpPrice: { fontFamily:"'Cormorant Garamond',serif", fontSize:32, fontWeight:600, color:'#1f1b16' },
+  pdpBtnBuy: { flex:1, background:'#1f1b16', color:'#fffdf9', border:'none', borderRadius:4, padding:'13px 28px', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:"'DM Sans',sans-serif", transition:'background 200ms', letterSpacing:'.03em' },
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

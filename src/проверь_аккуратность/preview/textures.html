@@ -1,0 +1,20 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@800&family=Inter:wght@500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;padding:20px;font-family:'Inter',sans-serif;display:flex;gap:12px}
+.tex{border-radius:12px;overflow:hidden;flex:1;height:130px;position:relative}
+.overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.tex-label{font-family:'Unbounded',sans-serif;font-size:14px;font-weight:800;color:#fff;letter-spacing:-.02em}
+.tex-sub{font-size:11px;color:rgba(255,255,255,.5);font-family:monospace}
+</style></head><body>
+<div class="tex" style="background-image:url('../assets/texture-magenta.png');background-size:cover">
+  <div class="overlay"><div class="tex-label" style="color:#f060cc">MAGENTA</div><div class="tex-sub">texture-magenta.png</div><div class="tex-sub" style="color:rgba(217,60,175,.6)">Hero · CTA · Featured</div></div>
+</div>
+<div class="tex" style="background-image:url('../assets/texture-blue.png');background-size:cover">
+  <div class="overlay"><div class="tex-label" style="color:#5a8ff8">BLUE</div><div class="tex-sub">texture-blue.png</div><div class="tex-sub" style="color:rgba(58,111,216,.6)">Category · Info panels</div></div>
+</div>
+<div class="tex" style="background-image:url('../assets/texture-green.png');background-size:cover">
+  <div class="overlay"><div class="tex-label" style="color:#3fd572">GREEN</div><div class="tex-sub">texture-green.png</div><div class="tex-sub" style="color:rgba(45,181,93,.6)">Promo · Sales</div></div>
+</div>
+</body></html>

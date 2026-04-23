@@ -1,0 +1,38 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;padding:20px;font-family:'Inter',sans-serif}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.label{font-size:10px;font-weight:500;color:#505050;letter-spacing:.1em;text-transform:uppercase;width:100%;margin-bottom:4px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:9999px;font-size:12px;font-weight:500;border:1px solid;cursor:pointer}
+</style></head><body>
+
+<div class="row"><div class="label">Status Badges</div>
+  <span class="badge" style="background:rgba(45,181,93,.15);color:#3fd572">В наличии</span>
+  <span class="badge" style="background:rgba(232,160,32,.15);color:#e8a020">Мало</span>
+  <span class="badge" style="background:rgba(224,60,60,.15);color:#e03c3c">Нет в наличии</span>
+  <span class="badge" style="background:rgba(217,60,175,.15);color:#d93caf">Новинка</span>
+  <span class="badge" style="background:rgba(58,111,216,.15);color:#5a8ff8">Хит продаж</span>
+  <span class="badge" style="background:#1e1e1e;color:#a0a0a0">Скоро</span>
+</div>
+
+<div class="row"><div class="label">Filter Chips</div>
+  <span class="chip" style="background:rgba(58,111,216,.15);color:#5a8ff8;border-color:rgba(58,111,216,.4)">NFC ✓</span>
+  <span class="chip" style="background:#141414;color:#a0a0a0;border-color:#2a2a2a">5G</span>
+  <span class="chip" style="background:#141414;color:#a0a0a0;border-color:#2a2a2a">Wi-Fi 6</span>
+  <span class="chip" style="background:rgba(58,111,216,.15);color:#5a8ff8;border-color:rgba(58,111,216,.4)">256 GB ✓</span>
+  <span class="chip" style="background:#141414;color:#a0a0a0;border-color:#2a2a2a">512 GB</span>
+  <span class="chip" style="background:#141414;color:#a0a0a0;border-color:#2a2a2a">1 TB</span>
+</div>
+
+<div class="row"><div class="label">Brand Tags</div>
+  <span class="chip" style="background:#1e1e1e;color:#fff;border-color:#3a3a3a;font-weight:600">Apple</span>
+  <span class="chip" style="background:#1e1e1e;color:#a0a0a0;border-color:#2a2a2a">Samsung</span>
+  <span class="chip" style="background:#1e1e1e;color:#a0a0a0;border-color:#2a2a2a">Xiaomi</span>
+  <span class="chip" style="background:#1e1e1e;color:#a0a0a0;border-color:#2a2a2a">Google</span>
+  <span class="chip" style="background:#1e1e1e;color:#a0a0a0;border-color:#2a2a2a">Dyson</span>
+</div>
+
+</body></html>

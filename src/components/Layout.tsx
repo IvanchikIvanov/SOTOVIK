@@ -374,7 +374,7 @@ export default function Layout() {
                                                     return (
                                                         <Link
                                                             key={`m-${cat.id}-${brand}`}
-                                                            to={`${cat.path}?brand=${encodeURIComponent(brand)}`}
+                                                            to={toBrandSlug(brand) ? `/brand/${toBrandSlug(brand)}` : `${cat.path}?brand=${encodeURIComponent(brand)}`}
                                                             className={`text-[11px] uppercase tracking-[0.09em] px-2 py-1 rounded-[3px] transition-colors ${isBrandActive
                                                                 ? 'bg-[#ece0c6] text-[#3f351f]'
                                                                 : 'text-[#7b6f5f] hover:bg-[#f4eee5] hover:text-[#1f1b16]'

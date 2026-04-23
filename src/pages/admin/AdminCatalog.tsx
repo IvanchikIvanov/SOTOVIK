@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { parseCsv } from '../../lib/csv';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import type { ProductAvailability, ProductCategory } from '../../types/product';
+import { useAuth } from '../../context/AuthContext';
 
 interface AdminProductRow {
     id: number;
@@ -47,6 +48,7 @@ function parseAvailability(value: string): ProductAvailability {
 }
 
 export default function AdminCatalog() {
+    const { isSuperadmin, role } = useAuth();
     const [rows, setRows] = useState<AdminProductRow[]>([]);
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
@@ -80,6 +82,23 @@ export default function AdminCatalog() {
     useEffect(() => {
         loadRows();
     }, []);
+
+    const handleDelete = async (row: AdminProductRow) => {
+        if (!isSuperadmin) return;
+        if (!isSupabaseConfigured()) {
+            setMessage('Supabase не настроен.');
+            return;
+        }
+        const ok = window.confirm(`Удалить «${row.name}» (SKU ${row.sku})? Действие необратимо.`);
+        if (!ok) return;
+        const { error } = await supabase.from('products_catalog').delete().eq('id', row.id);
+        if (error) {
+            setMessage(`Ошибка удаления: ${error.message}`);
+            return;
+        }
+        setRows((prev) => prev.filter((r) => r.id !== row.id));
+        setMessage(`Удалено: ${row.name}`);
+    };
 
     const filteredRows = useMemo(() => {
         const query = search.trim().toLowerCase();
@@ -190,6 +209,17 @@ export default function AdminCatalog() {
                 <p className="text-sm text-[#7a6d5d] mt-2">
                     Управление таблицей товаров и загрузкой CSV в `products_catalog`.
                 </p>
+                {role && (
+                    <div className="mt-3 inline-flex items-center gap-2 rounded-[4px] bg-[#f1ebe2] px-2.5 py-1 text-[11px] uppercase tracking-[0.1em] text-[#5f5346]">
+                        <span>Роль:</span>
+                        <span className="font-semibold text-[#1f1b16]">
+                            {role === 'superadmin' ? 'Суперадмин' : 'Редактор'}
+                        </span>
+                        {!isSuperadmin && (
+                            <span className="text-[#a5423e] normal-case tracking-normal">· удаление недоступно</span>
+                        )}
+                    </div>
+                )}
             </div>
 
             <section className="z-shell p-5 space-y-4">
@@ -245,6 +275,9 @@ export default function AdminCatalog() {
                                         {title}
                                     </th>
                                 ))}
+                                {isSuperadmin && (
+                                    <th className="text-right py-2 px-2 text-[11px] uppercase tracking-[0.1em] text-[#877b6b]">Действие</th>
+                                )}
                             </tr>
                         </thead>
                         <tbody>
@@ -260,11 +293,22 @@ export default function AdminCatalog() {
                                     <td className="py-2 px-2">{row.color}</td>
                                     <td className="py-2 px-2">{row.ram}</td>
                                     <td className="py-2 px-2">{row.storage}</td>
+                                    {isSuperadmin && (
+                                        <td className="py-2 px-2 text-right">
+                                            <button
+                                                type="button"
+                                                onClick={() => handleDelete(row)}
+                                                className="text-[11px] uppercase tracking-[0.1em] px-2 py-1 rounded-[4px] border border-[#e0b7b3] text-[#a5423e] hover:bg-[#fbefee] transition-colors"
+                                            >
+                                                Удалить
+                                            </button>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                             {pagedRows.length === 0 && (
                                 <tr>
-                                    <td colSpan={10} className="text-center py-8 text-[#7f7363]">
+                                    <td colSpan={isSuperadmin ? 11 : 10} className="text-center py-8 text-[#7f7363]">
                                         Нет данных для отображения.
                                     </td>
                                 </tr>

@@ -3,11 +3,17 @@ import type { User, Session } from '@supabase/supabase-js';
 
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
+export type AdminRole = 'superadmin' | 'editor' | null;
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  /** Any admin-level role (superadmin or editor). */
   isAdmin: boolean;
+  /** True only for superadmin (can delete products). */
+  isSuperadmin: boolean;
+  role: AdminRole;
   signOut: () => Promise<void>;
   refreshRole: () => Promise<void>;
 }
@@ -17,19 +23,27 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   loading: true,
   isAdmin: false,
+  isSuperadmin: false,
+  role: null,
   signOut: async () => { },
   refreshRole: async () => { },
 });
+
+function normalizeRole(raw: string | null | undefined): AdminRole {
+  if (raw === 'superadmin' || raw === 'admin') return 'superadmin';
+  if (raw === 'editor') return 'editor';
+  return null;
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [role, setRole] = useState<AdminRole>(null);
 
   const resolveAdminRole = async (userId: string | null) => {
     if (!userId || !isSupabaseConfigured()) {
-      setIsAdmin(false);
+      setRole(null);
       return;
     }
 
@@ -41,14 +55,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .maybeSingle();
 
       if (error) {
-        setIsAdmin(false);
+        setRole(null);
         return;
       }
 
-      setIsAdmin(data?.role === 'admin');
+      setRole(normalizeRole(data?.role));
     } catch (error) {
       console.error('Role resolution error:', error);
-      setIsAdmin(false);
+      setRole(null);
     }
   };
 
@@ -78,15 +92,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    setIsAdmin(false);
+    setRole(null);
   };
 
   const refreshRole = async () => {
     await resolveAdminRole(user?.id ?? null);
   };
 
+  const isAdmin = role === 'superadmin' || role === 'editor';
+  const isSuperadmin = role === 'superadmin';
+
   return (
-    <AuthContext.Provider value={{ user, session, loading, isAdmin, signOut, refreshRole }}>
+    <AuthContext.Provider value={{ user, session, loading, isAdmin, isSuperadmin, role, signOut, refreshRole }}>
       {!loading && children}
     </AuthContext.Provider>
   );

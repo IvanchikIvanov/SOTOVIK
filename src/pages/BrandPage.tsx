@@ -39,18 +39,18 @@ export default function BrandPage() {
                 <h1 className="z-title text-4xl md:text-5xl mb-8" style={{ fontWeight: 600 }}>{brand.name}</h1>
 
                 {series.length > 0 && (
-                    <section className="z-shell p-6 md:p-8 mb-8 space-y-8">
+                    <section className="z-shell p-4 md:p-8 mb-8 space-y-6 md:space-y-8 overflow-hidden">
                         {series.map((group) => (
                             <div key={group.title}>
                                 <h3 className="text-[#1f1b16] text-sm font-semibold mb-3 tracking-[0.02em]">
                                     {group.title}
                                 </h3>
-                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-6 gap-y-1.5">
+                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-3 md:gap-x-6 gap-y-1.5">
                                     {group.models.map((model) => (
-                                        <li key={model}>
+                                        <li key={model} className="min-w-0">
                                             <Link
                                                 to={`/model/${brand.slug}/${modelSlug(model)}`}
-                                                className="text-sm text-[#6f6354] hover:text-[#8b6a47] hover:underline underline-offset-2 transition-colors"
+                                                className="block text-[13px] md:text-sm text-[#6f6354] hover:text-[#8b6a47] hover:underline underline-offset-2 transition-colors break-words"
                                             >
                                                 {model}
                                             </Link>
